@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "lift.h"
-#include "list.h"
+#include "queue.h"
 #include "request.h"
 #include "mutex.h"
 #include "debug.h"

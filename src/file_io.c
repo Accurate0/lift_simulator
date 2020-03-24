@@ -3,9 +3,7 @@
 #include <pthread.h>
 
 #include "file_io.h"
-#include "list.h"
 #include "request.h"
-#include "error.h"
 
 request_t* file_read_line(FILE *file)
 {

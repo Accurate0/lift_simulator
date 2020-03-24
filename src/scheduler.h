@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <pthread.h>
 
-#include "list.h"
+#include "queue.h"
 #include "mutex.h"
 
 struct scheduler {

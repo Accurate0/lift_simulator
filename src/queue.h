@@ -1,5 +1,5 @@
-#ifndef LIST_H
-#define LIST_H
+#ifndef QUEUE_H
+#define QUEUE_H
 
 #include <stdbool.h>
 #include <pthread.h>
@@ -20,6 +20,7 @@ struct queue {
     int max;
     int count;
 };
+
 struct queue* queue_init(int m);
 void queue_add(struct queue *queue, void *node);
 void* queue_remove(struct queue *queue);

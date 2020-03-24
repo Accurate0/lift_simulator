@@ -1,7 +1,7 @@
 #ifndef LIFT_H
 #define LIFT_H
 
-#include "list.h"
+#include "queue.h"
 #include "mutex.h"
 
 struct lift {
