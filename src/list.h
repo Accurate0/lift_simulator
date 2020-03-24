@@ -1,22 +1,28 @@
 #ifndef LIST_H
 #define LIST_H
 
-typedef struct node_t {
-    struct node_t *next;
-    struct node_t *prev;
+#include <stdbool.h>
+#include <pthread.h>
+
+struct node {
+    struct node *next;
     void *data;
-} node_t;
+};
 
-typedef struct {
-    node_t *head;
-    node_t *tail;
-} list_t;
-
-list_t* list_init();
-node_t* node_init(void *data);
-void list_add_end(list_t *list, node_t *node);
-node_t* list_remove_start(list_t *list);
-void node_free(node_t *node);
-void list_free(list_t *list);
+struct queue {
+    pthread_mutex_t mutex;
+    pthread_cond_t cond_full;
+    struct node *head;
+    struct node *tail;
+    bool full;
+    bool empty;
+    bool finished;
+    int max;
+    int count;
+};
+struct queue* queue_init(int m);
+void queue_add(struct queue *queue, void *node);
+void* queue_remove(struct queue *queue);
+void queue_free(struct queue *queue);
 
 #endif

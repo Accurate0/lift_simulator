@@ -3,7 +3,7 @@ obj/
 lift_sim_A
 lift_sim_B
 .vscode
-
+sim_out
 report/report.aux
 report/report.fdb_latexmk
 report/report.fls

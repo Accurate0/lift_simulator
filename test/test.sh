@@ -21,6 +21,7 @@ print_green() {
 run() {
     local output
     output=$($1 2>&1)
+    # $1 2>&1
 
     if [ "$?" -eq "$2" ]; then
         print_red "failed"
@@ -34,13 +35,13 @@ main() {
     for f in "${TEST_DIR[@]}"; do
         echo "testing $f: "
         echo -ne "\t regular  -> "
-        run "$EXEC $f" "1"
+        run "$EXEC $f 0" "1"
 
         echo -ne "\t valgrind -> "
-        run "$VALGRIND $EXEC $f" "2"
+        run "$VALGRIND $EXEC $f 0" "2"
 
         echo -ne "\t helgrind -> "
-        run "$HELGRIND $EXEC $f" "2"
+        run "$HELGRIND $EXEC $f 0" "2"
     done
 }
 

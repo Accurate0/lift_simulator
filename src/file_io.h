@@ -1,7 +1,7 @@
 #ifndef FILE_IO_H
 #define FILE_IO_H
 #include "list.h"
+#include "request.h"
 
-list_t* read_input(const char *filename);
-
+request_t* file_read_line(FILE *file);
 #endif

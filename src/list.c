@@ -3,70 +3,100 @@
 #include "list.h"
 // #include "request.h"
 
-list_t* list_init()
+struct queue* queue_init(int m)
 {
-    list_t *list = malloc(sizeof(list_t));
-    list->head = NULL;
-    list->tail = NULL;
+    struct queue *queue = malloc(sizeof(struct queue));
+    queue->max = m;
+    queue->count = 0;
+    queue->head = NULL;
+    queue->tail = NULL;
+    queue->empty = true;
+    queue->full = false;
+    queue->finished = false;
 
-    return list;
+    pthread_mutex_init(&queue->mutex, NULL);
+    pthread_cond_init(&queue->cond_full, NULL);
+
+    return queue;
 }
 
-node_t* node_init(void *data)
+static struct node* node_init(void *data)
 {
-    node_t *node = malloc(sizeof(node_t));
+    struct node *node = malloc(sizeof(struct node));
     node->next = NULL;
-    node->prev = NULL;
     node->data = data;
 
     return node;
 }
 
-void list_add_end(list_t *list, node_t *node)
+void queue_add(struct queue *queue, void *ptr)
 {
-    if(list->tail == NULL) {
-        list->head = node;
-        list->tail = node;
-    } else {
-        list->tail->next = node;
-        node->prev = list->tail;
-        list->tail = node;
+    struct node *node = node_init(ptr);
+    if(queue->count == queue->max) {
+        return;
     }
+
+    if(queue->tail == NULL) {
+        queue->head = node;
+        queue->tail = node;
+    } else {
+        queue->tail->next = node;
+        queue->tail = node;
+        queue->empty = false;
+    }
+
+    queue->count++;
+    if(queue->count == queue->max) {
+        queue->full = true;
+    }
+
 
     // printf("added : %d %d\n", ((request_t*)node->data)->src,((request_t*)node->data)->dest);
 }
 
-node_t* list_remove_start(list_t *list)
+void* queue_remove(struct queue *queue)
 {
-    node_t *ret = list->head;
+    struct node *node = queue->head;
 
-    if(list->head && list->head->next) {
-        list->head = list->head->next;
-        list->head->prev = NULL;
-    } else if(!list->head->next) {
-        list->head = NULL;
+    if(!node) {
+        return NULL;
     }
 
-    return ret;
+    void *data = queue->head->data;
+
+    if(queue->head && queue->head->next) {
+        queue->head = queue->head->next;
+    } else if(!queue->head->next) {
+        queue->head = NULL;
+        queue->tail = NULL;
+        queue->empty = true;
+    }
+
+    queue->full = false;
+    queue->count--;
+    free(node);
+    return data;
 }
 
-void node_free(node_t *node)
+static void node_free(struct node *node)
 {
     free(node->data);
     free(node);
 }
 
-void list_free(list_t *list)
+void queue_free(struct queue *queue)
 {
-    node_t *current = list->head;
+    struct node *current = queue->head;
 
     while(current) {
-        node_t *next = current->next;
+        struct node *next = current->next;
 
         node_free(current);
 
         current = next;
     }
 
-    free(list);
+    pthread_mutex_destroy(&queue->mutex);
+    pthread_cond_destroy(&queue->cond_full);
+    free(queue);
 }

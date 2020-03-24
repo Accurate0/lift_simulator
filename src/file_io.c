@@ -1,10 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #include "file_io.h"
 #include "list.h"
 #include "request.h"
+#include "error.h"
 
+request_t* file_read_line(FILE *file)
+{
+    char buffer[BUFSIZ] = {0};
+    if(!fgets(buffer, BUFSIZ, file)) {
+        return NULL;
+    }
+
+    request_t *req = malloc(sizeof(request_t));
+    sscanf(buffer, "%d %d", &req->src, &req->dest);
+
+    return req;
+}
+
+#if 0
 list_t* read_input(const char *filename)
 {
     FILE *f = fopen(filename, "r");
@@ -32,3 +48,4 @@ list_t* read_input(const char *filename)
 
     return list;
 }
+#endif
