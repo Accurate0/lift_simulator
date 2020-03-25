@@ -17,7 +17,7 @@ HELGRIND = 'valgrind --tool=helgrind --error-exitcode=2 {}'
 TEST_DIR = 'test/inputs/'
 
 QUEUE_SIZE = 5
-LIFT_TIME  = 0
+LIFT_TIME  = 1
 
 class Result(object):
     def __init__(self, name, file, ret):
@@ -34,7 +34,7 @@ class TaskThread(Thread):
     def run(self):
         for task in self._tasks:
             cmd = shlex.split(task)
-            ret = subprocess.run(cmd, stdout=DEVNULL, stderr=DEVNULL, timeout=3)
+            ret = subprocess.run(cmd, stdout=DEVNULL, stderr=DEVNULL)
             self._q.put(Result(task, cmd[-1], ret.returncode))
 
         self._q.put('end')
@@ -59,7 +59,7 @@ def main():
                 + [EXEC.format(QUEUE_SIZE, LIFT_TIME, file) for file in files]
 
     q = Queue()
-    threads = [TaskThread(q, chunk) for chunk in chunks(total_tasks, 20)]
+    threads = [TaskThread(q, chunk) for chunk in chunks(total_tasks, 10)]
 
     for thread in threads:
         thread.daemon = True
