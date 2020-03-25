@@ -1,4 +1,10 @@
 #ifndef DEBUG_PRINTF_H
 #define DEBUG_PRINTF_H
-int d_printf(const char *s, ...);
+
+#ifdef DEBUG
+    #define D_PRINTF(s, ...) fprintf(stderr, s, __VA_ARGS__)
+#else
+    #define D_PRINTF(s, ...)
+#endif
+
 #endif

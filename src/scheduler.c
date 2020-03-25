@@ -35,20 +35,20 @@ void* scheduler(void *ptr)
     while(!finished) {
         pthread_mutex_lock(&s->queue->mutex);
 
-        // if queue at max capacity, wait for someone to dequeue
+        D_PRINTF("q rn: %d\n", s->queue->count);
 
-        d_printf("q rn: %d\n", s->queue->count);
         while(s->queue->full) {
-            d_printf("q at max: %d\n", s->queue->count);
+            // if queue at max capacity, wait for someone to dequeue
+            D_PRINTF("q at max: %d\n", s->queue->count);
             pthread_cond_wait(&s->queue->cond_full, &s->queue->mutex);
         }
 
         request_t *r = file_read_line(s->input);
         if(r) {
             queue_add(s->queue, r);
-            pthread_cond_signal(&s->queue->cond_full);
+            pthread_cond_signal(&s->queue->cond_empty);
         } else {
-            pthread_cond_broadcast(&s->queue->cond_full);
+            pthread_cond_broadcast(&s->queue->cond_empty);
             s->queue->finished = true;
             finished = true;
         }
@@ -56,5 +56,6 @@ void* scheduler(void *ptr)
         pthread_mutex_unlock(&s->queue->mutex);
     }
 
+    D_PRINTF("prod has died %s\n",  "lol");
     return NULL;
 }

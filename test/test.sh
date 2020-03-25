@@ -35,13 +35,13 @@ main() {
     for f in "${TEST_DIR[@]}"; do
         echo "testing $f: "
         echo -ne "\t regular  -> "
-        run "$EXEC $f 0" "1"
+        run "$EXEC 5 0 $f" "1"
 
         echo -ne "\t valgrind -> "
-        run "$VALGRIND $EXEC $f 0" "2"
+        run "$VALGRIND $EXEC 5 0 $f" "2"
 
         echo -ne "\t helgrind -> "
-        run "$HELGRIND $EXEC $f 0" "2"
+        run "$HELGRIND $EXEC 5 0 $f" "2"
     done
 }
 

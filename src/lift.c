@@ -34,34 +34,33 @@ void* lift(void *ptr)
     while(1) {
         pthread_mutex_lock(&l->queue->mutex);
 
-        if(l->queue->finished) {
-            if(l->queue->empty) {
-                pthread_cond_broadcast(&l->queue->cond_full);
-                pthread_mutex_unlock(&l->queue->mutex);
-                break;
-            }
+        if(l->queue->empty && l->queue->finished) {
+            pthread_cond_broadcast(&l->queue->cond_empty);
+            pthread_mutex_unlock(&l->queue->mutex);
+            D_PRINTF("thread -> %ld has died\n", t);
+            break;
         }
 
         while(l->queue->empty && !l->queue->finished) {
-            pthread_cond_wait(&l->queue->cond_full, &l->queue->mutex);
+            D_PRINTF("thread %ld waiting\n", t);
+            pthread_cond_wait(&l->queue->cond_empty, &l->queue->mutex);
         }
 
         if(!l->queue->empty) {
-            d_printf("thread -> %ld\n", t);
+            D_PRINTF("thread -> %ld\n", t);
             request_t *r = queue_remove(l->queue);
+            // D_PRINTF("req : %p\n", r);
             // need to let scheduler thread know that there's space now in the queue
             pthread_cond_signal(&l->queue->cond_full);
-            // unlock and then sleep
+            pthread_mutex_unlock(&l->queue->mutex);
 
             if(r) {
-                d_printf("%d %d sleeping for %d\n", r->src, r->dest, l->lift_time);
+                D_PRINTF("%d %d sleeping for %d\n", r->src, r->dest, l->lift_time);
                 free(r);
-                pthread_mutex_unlock(&l->queue->mutex);
-                // simulate lift
-                // gotta unlock so the queue can be used
-                // by other threads
                 sleep(l->lift_time);
             }
+        } else {
+            pthread_mutex_unlock(&l->queue->mutex);
         }
     }
 

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "queue.h"
-// #include "request.h"
+#include "request.h"
 
 struct queue* queue_init(int m)
 {
@@ -15,12 +15,13 @@ struct queue* queue_init(int m)
     queue->finished = false;
 
     pthread_mutex_init(&queue->mutex, NULL);
+    pthread_cond_init(&queue->cond_empty, NULL);
     pthread_cond_init(&queue->cond_full, NULL);
 
     return queue;
 }
 
-static struct node* node_init(void *data)
+static struct node* node_init(request_t *data)
 {
     struct node *node = malloc(sizeof(struct node));
     node->next = NULL;
@@ -29,7 +30,7 @@ static struct node* node_init(void *data)
     return node;
 }
 
-void queue_add(struct queue *queue, void *ptr)
+void queue_add(struct queue *queue, request_t *ptr)
 {
     struct node *node = node_init(ptr);
     if(queue->count == queue->max) {
@@ -42,7 +43,6 @@ void queue_add(struct queue *queue, void *ptr)
     } else {
         queue->tail->next = node;
         queue->tail = node;
-        queue->empty = false;
     }
 
     queue->count++;
@@ -50,11 +50,10 @@ void queue_add(struct queue *queue, void *ptr)
         queue->full = true;
     }
 
-
-    // printf("added : %d %d\n", ((request_t*)node->data)->src,((request_t*)node->data)->dest);
+    queue->empty = false;
 }
 
-void* queue_remove(struct queue *queue)
+request_t* queue_remove(struct queue *queue)
 {
     struct node *node = queue->head;
 
@@ -75,6 +74,7 @@ void* queue_remove(struct queue *queue)
     queue->full = false;
     queue->count--;
     free(node);
+
     return data;
 }
 
@@ -97,6 +97,7 @@ void queue_free(struct queue *queue)
     }
 
     pthread_mutex_destroy(&queue->mutex);
+    pthread_cond_destroy(&queue->cond_empty);
     pthread_cond_destroy(&queue->cond_full);
     free(queue);
 }
