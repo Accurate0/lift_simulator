@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
 
 #include "scheduler.h"
 #include "file_io.h"
@@ -9,11 +11,11 @@
 // Gets tasks from the queue/list
 // and put them into a "buffer"
 // read by the lift threads
-struct scheduler* scheduler_init(FILE *input, FILE *output, struct queue *queue)
+struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct logger *logger)
 {
     struct scheduler *s = malloc(sizeof(struct scheduler));
     s->input = input;
-    s->output = output;
+    s->logger = logger;
     s->queue = queue;
 
     return s;
@@ -28,24 +30,32 @@ void* scheduler(void *ptr)
 {
     struct scheduler *s = (struct scheduler *)ptr;
     int request_num = 0;
-    (void)request_num;
-
     bool finished = false;
+
+#ifdef DEBUG
+    pthread_t t = pthread_self();
+#endif
+    D_PRINTF("prod created: %ld\n", t);
 
     while(!finished) {
         pthread_mutex_lock(&s->queue->mutex);
 
-        D_PRINTF("q rn: %d\n", s->queue->count);
+        D_PRINTF("prod: q rn: %d\n", s->queue->count);
 
         while(s->queue->full) {
             // if queue at max capacity, wait for someone to dequeue
-            D_PRINTF("q at max: %d\n", s->queue->count);
+            D_PRINTF("prod: q at max: %d\n", s->queue->count);
             pthread_cond_wait(&s->queue->cond_full, &s->queue->mutex);
         }
 
         request_t *r = file_read_line(s->input);
         if(r) {
             queue_add(s->queue, r);
+            request_num++;
+            FILE_LOG(s->logger, "------------------------------\n"
+                                "New Lift Request from %d to %d\n"
+                                "Request No: %d\n"
+                                "------------------------------\n", r->src, r->dest, request_num);
             pthread_cond_signal(&s->queue->cond_empty);
         } else {
             pthread_cond_broadcast(&s->queue->cond_empty);
@@ -57,5 +67,9 @@ void* scheduler(void *ptr)
     }
 
     D_PRINTF("prod has died %s\n",  "lol");
-    return NULL;
+    D_PRINTF("total req %d\n",  request_num);
+    int *ret_total_requests = malloc(sizeof(int));
+    *ret_total_requests = request_num;
+
+    return ret_total_requests;
 }

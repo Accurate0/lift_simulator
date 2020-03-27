@@ -17,7 +17,7 @@ HELGRIND = 'valgrind --tool=helgrind --error-exitcode=2 {}'
 TEST_DIR = 'test/inputs/'
 
 QUEUE_SIZE = 5
-LIFT_TIME  = 1
+LIFT_TIME  = 0
 
 class Result(object):
     def __init__(self, name, file, ret):
@@ -47,7 +47,7 @@ def chunks(lst, n):
 
 def recompile():
     subprocess.run(shlex.split('make clean'))
-    subprocess.run(shlex.split('make'))
+    subprocess.run(shlex.split('make VALGRIND=1'))
 
 def main():
     recompile()
@@ -82,7 +82,7 @@ def main():
 
             file = ret.file + (' ' * (maxlen - len(ret.file)))
 
-            print(f'{name} {file} --> ', end='')
+            print(f'{name} {file} ', end='')
 
             if ret.ret == 0:
                 print('\033[92m[pass]\033[0m')

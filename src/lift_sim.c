@@ -6,19 +6,12 @@
 #include "queue.h"
 #include "scheduler.h"
 #include "lift.h"
-#include "mutex.h"
+#include "log.h"
+#include "debug.h"
 
 #define OUTPUT_FILENAME         "sim_out"
 #define TOTAL_THREADS           4
-
-// TODO: Need to add logging along with a struct + mutex
-// TODO: Keep it similar to how the queue struct is
-
-// TODO: Track current position for each elevator
-
-// TODO: Add some shared statistic tracking
-
-// TODO: Fix test script, figure out why it freezes randomly
+#define TOTAL_LIFTS             3
 
 // TODO: Add proccesses after threads is complete
 // TODO: Probably use #ifdef for that, not reason to
@@ -35,7 +28,7 @@ int main(int argc, const char *argv[])
         return EXIT_FAILURE;
     }
 
-    int m =  atoi(argv[1]);
+    int m = atoi(argv[1]);
     int lift_time = atoi(argv[2]);
 
     FILE *input = fopen(argv[3], "r");
@@ -51,33 +44,53 @@ int main(int argc, const char *argv[])
     }
 
     pthread_t threads[TOTAL_THREADS];
+    struct lift *lifts[TOTAL_LIFTS];
+    int *total_ptrs[TOTAL_THREADS];
 
     struct queue *queue = queue_init(m);
+    struct logger *logger = logger_init(output);
 
     // thread 0 is task scheduler
     // thread 1 - TOTAL_THREADS are lift threads
-
-    struct lift *l = lift_init(output, queue, lift_time);
-    // create all lift threads
-    for(int i = 1; i < TOTAL_THREADS; i++) {
-        pthread_create(&threads[i], NULL, lift, l);
+    for(int i = 0; i < TOTAL_LIFTS; i++) {
+        lifts[i] = lift_init(queue, lift_time, logger, i + 1);
+        pthread_create(&threads[i + 1], NULL, lift, lifts[i]);
     }
 
-    struct scheduler *s = scheduler_init(input, output, queue);
+    struct scheduler *s = scheduler_init(input, queue, logger);
     pthread_create(&threads[0], NULL, scheduler, s);
+
+    // Contains all the returned int pointers
+    // thread 0 returns total requests
+    // thread 1-3 returns each of their total movements
+
     // Clean up
     // join all threads
     for(int i = 0; i < TOTAL_THREADS; i++) {
-        pthread_join(threads[i], NULL);
+        pthread_join(threads[i], (void**)&total_ptrs[i]);
+    }
+
+    D_PRINTF("final : %d %d %d %d\n", *total_ptrs[0], *total_ptrs[1], *total_ptrs[2], *total_ptrs[3]);
+
+    // Log the final stuff once the threads are dead
+    FILE_LOG(logger, "Total Number of Requests: %d\n"
+                     "Total Number of Movements: %d\n",
+                     *total_ptrs[0], (*total_ptrs[1] + *total_ptrs[2] + *total_ptrs[3]));
+
+    for(int i = 0; i < TOTAL_THREADS; i++) {
+        free(total_ptrs[i]);
+    }
+
+    for(int i = 0; i < TOTAL_LIFTS; i++) {
+        lift_free(lifts[i]);
     }
 
     fclose(input);
     fclose(output);
 
+    logger_free(logger);
     queue_free(queue);
-
     scheduler_free(s);
-    lift_free(l);
 
     return EXIT_SUCCESS;
 }

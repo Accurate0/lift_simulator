@@ -1,5 +1,16 @@
 CC=clang
 CFLAGS=-Wall -std=c99 -Wextra -pedantic -g
+CFLAGS+=-Wformat=2 -Wswitch-default -Wswitch-enum
+CFLAGS+=-Wpointer-arith -Wbad-function-cast
+CFLAGS+=-Wstrict-overflow=5 -Wstrict-prototypes
+CFLAGS+=-Winline -Wundef -Wnested-externs
+CFLAGS+=-Wcast-qual -Wshadow -Wunreachable-code
+CFLAGS+=-Wfloat-equal -Wstrict-aliasing
+CFLAGS+=-Wredundant-decls -Wold-style-definition
+CFLAGS+=-ggdb3 -O0 -fno-omit-frame-pointer
+CFLAGS+=-fno-common -Wdouble-promotion -Wcast-align
+CFLAGS+=-Winit-self
+CFLAGS+=-fsanitize=unsigned-integer-overflow,nullability,float-divide-by-zero
 LDFLAGS=-pthread
 EXEC_A=lift_sim_A
 EXEC_B=lift_sim_B
@@ -12,11 +23,12 @@ OBJ=$(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 .PHONY: all clean
 
-ifdef TSAN
-CFLAGS+=-fsanitize=thread
-LDFLAGS+=-fsanitize=thread
-TSAN: clean $(EXEC_A)
+ifndef VALGRIND
+CFLAGS+=-fsanitize=address,undefined
+LDFLAGS+=-fsanitize=address -lubsan
 endif
+
+# CFLAGS+=-fsanitize=address -fsanitize-address-use-after-scope
 
 ifdef DEBUG
 CFLAGS+=-D DEBUG

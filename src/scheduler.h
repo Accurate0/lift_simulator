@@ -5,15 +5,15 @@
 #include <pthread.h>
 
 #include "queue.h"
-#include "mutex.h"
+#include "log.h"
 
 struct scheduler {
     FILE *input;
-    FILE *output;
     struct queue *queue;
+    struct logger *logger;
 };
 
-struct scheduler* scheduler_init(FILE *input, FILE *output, struct queue *queue);
+struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct logger *logger);
 void scheduler_free(struct scheduler *s);
 void* scheduler(void *ptr);
 
