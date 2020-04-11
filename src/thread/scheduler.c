@@ -2,10 +2,11 @@
 #include <string.h>
 #include <pthread.h>
 
+#include <common/file_io.h>
+#include <common/request.h>
+#include <common/debug.h>
+
 #include "scheduler.h"
-#include "file_io.h"
-#include "request.h"
-#include "debug.h"
 
 // This is the scheduler thread
 // Gets tasks from the queue/list
@@ -14,6 +15,7 @@
 struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct logger *logger)
 {
     struct scheduler *s = malloc(sizeof(struct scheduler));
+    s->total_requests = 0;
     s->input = input;
     s->logger = logger;
     s->queue = queue;
@@ -29,13 +31,12 @@ void scheduler_free(struct scheduler *s)
 void* scheduler(void *ptr)
 {
     struct scheduler *s = (struct scheduler *)ptr;
-    int request_num = 0;
     bool finished = false;
 
 #ifdef DEBUG
     pthread_t t = pthread_self();
-#endif
     D_PRINTF("prod created: %ld\n", t);
+#endif
 
     while(!finished) {
         pthread_mutex_lock(&s->queue->mutex);
@@ -51,13 +52,15 @@ void* scheduler(void *ptr)
         request_t *r = file_read_line(s->input);
         if(r) {
             queue_add(s->queue, r);
-            request_num++;
+            s->total_requests++;
             FILE_LOG(s->logger, "------------------------------\n"
                                 "New Lift Request from %d to %d\n"
                                 "Request No: %d\n"
-                                "------------------------------\n", r->src, r->dest, request_num);
+                                "------------------------------\n", r->src, r->dest, s->total_requests);
             pthread_cond_signal(&s->queue->cond_empty);
         } else {
+            // let everyone know we got nothing to put in
+            // for anyone waiting for something to be added
             pthread_cond_broadcast(&s->queue->cond_empty);
             s->queue->finished = true;
             finished = true;
@@ -67,9 +70,6 @@ void* scheduler(void *ptr)
     }
 
     D_PRINTF("prod has died %s\n",  "lol");
-    D_PRINTF("total req %d\n",  request_num);
-    int *ret_total_requests = malloc(sizeof(int));
-    *ret_total_requests = request_num;
 
-    return ret_total_requests;
+    return NULL;
 }

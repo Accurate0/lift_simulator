@@ -1,50 +1,75 @@
 CC=clang
-CFLAGS=-Wall -std=c99 -Wextra -pedantic -g
-CFLAGS+=-Wformat=2 -Wswitch-default -Wswitch-enum
-CFLAGS+=-Wpointer-arith -Wbad-function-cast
-CFLAGS+=-Wstrict-overflow=5 -Wstrict-prototypes
-CFLAGS+=-Winline -Wundef -Wnested-externs
-CFLAGS+=-Wcast-qual -Wshadow -Wunreachable-code
-CFLAGS+=-Wfloat-equal -Wstrict-aliasing
-CFLAGS+=-Wredundant-decls -Wold-style-definition
-CFLAGS+=-ggdb3 -O0 -fno-omit-frame-pointer
-CFLAGS+=-fno-common -Wdouble-promotion -Wcast-align
-CFLAGS+=-Winit-self
-CFLAGS+=-fsanitize=unsigned-integer-overflow,nullability,float-divide-by-zero
-LDFLAGS=-pthread
+CFLAGS=-Wall -std=c99 -Wextra -pedantic -ggdb3 -O0
+CFLAGS+=-Isrc
+
+LDFLAGS_A=-pthread $(LDFLAGS)
+LDFLAGS_B=-lrt $(LDFLAGS)
+
 EXEC_A=lift_sim_A
 EXEC_B=lift_sim_B
 
 SRC_DIR=src
 OBJ_DIR=obj
 
-SRC=$(wildcard $(SRC_DIR)/*.c)
-OBJ=$(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+COMMON_SRC_DIR=$(SRC_DIR)/common
+THREAD_SRC_DIR=$(SRC_DIR)/thread
+PROCESS_SRC_DIR=$(SRC_DIR)/process
+
+COMMON_SRC=$(wildcard $(COMMON_SRC_DIR)/*.c)
+COMMON_OBJ=$(COMMON_SRC:$(COMMON_SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+THREAD_SRC=$(wildcard $(THREAD_SRC_DIR)/*.c)
+THREAD_OBJ=$(THREAD_SRC:$(THREAD_SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+PROCESS_SRC=$(wildcard $(PROCESS_SRC_DIR)/*.c)
+PROCESS_OBJ=$(PROCESS_SRC:$(PROCESS_SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+# SRC=$(wildcard $(SRC_DIR)/*.c)
+# OBJ=$(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+# RULE:
+# 	echo $(COMMON_SRC_DIR)
 
 .PHONY: all clean
 
-ifndef VALGRIND
-CFLAGS+=-fsanitize=address,undefined
+ifdef TSAN
+CFLAGS+=-fsanitize=thread
+LDFLAGS+=-fsanitize=thread
+endif
+
+ifdef ASAN
+CFLAGS+=-fsanitize=address,unsigned-integer-overflow,nullability,float-divide-by-zero,undefined
+CFLAGS+=-fsanitize-address-use-after-scope
 LDFLAGS+=-fsanitize=address -lubsan
 endif
 
-# CFLAGS+=-fsanitize=address -fsanitize-address-use-after-scope
-
 ifdef DEBUG
 CFLAGS+=-D DEBUG
-DEBUG: clean $(EXEC_A)
+DEBUG: clean all
 endif
 
-all: $(EXEC_A)
+# CFLAGS+=-fsanitize=address
 
-$(EXEC_A): $(OBJ)
-	$(CC) $^ -o $@ $(LDFLAGS)
+all: $(EXEC_A) $(EXEC_B)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+# Filter out the opposing main
+$(EXEC_A): $(COMMON_OBJ) $(THREAD_OBJ)
+	$(CC) $^ -o $@ $(LDFLAGS_A)
+
+$(EXEC_B): $(COMMON_OBJ) $(PROCESS_OBJ)
+	$(CC) $^ -o $@ $(LDFLAGS_B)
+
+$(OBJ_DIR)/%.o: $(THREAD_SRC_DIR)/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(PROCESS_SRC_DIR)/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(COMMON_SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir $@
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(EXEC_A) $(EXEC_B) $(COMMON_OBJ) $(THREAD_OBJ) $(PROCESS_OBJ)

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
+#include <common/request.h>
 #include "queue.h"
-#include "request.h"
 
 struct queue* queue_init(int m)
 {

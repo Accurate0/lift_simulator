@@ -7,6 +7,7 @@
 struct lift {
     int id;
     int lift_time;
+    int total_movements;
     struct queue *queue;
     struct logger *logger;
 };

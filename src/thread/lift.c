@@ -3,10 +3,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <common/request.h>
+#include <common/debug.h>
+
 #include "lift.h"
 #include "queue.h"
-#include "request.h"
-#include "debug.h"
 #include "log.h"
 
 // #define ABS(n) ((n) < 0 ? -(n) : (n))
@@ -14,6 +15,7 @@
 struct lift* lift_init(struct queue *queue, int lift_time, struct logger *logger, int id)
 {
     struct lift *l = malloc(sizeof(struct lift));
+    l->total_movements = 0;
     l->logger = logger;
     l->queue = queue;
     l->lift_time = lift_time;
@@ -35,17 +37,17 @@ void* lift(void *ptr)
     int current_floor = 1;
     int previous_floor = 1;
     int request_no = 0;
-    int total_movement = 0;
 
 #ifdef DEBUG
     pthread_t t = pthread_self();
-#endif
     D_PRINTF("consumer created: %ld\n", t);
+#endif
 
     while(1) {
         pthread_mutex_lock(&l->queue->mutex);
 
         if(l->queue->empty && l->queue->finished) {
+            // let everyone know that the queue is empty
             pthread_cond_broadcast(&l->queue->cond_empty);
             pthread_mutex_unlock(&l->queue->mutex);
             break;
@@ -70,7 +72,8 @@ void* lift(void *ptr)
             previous_floor = current_floor;
             current_floor = r->dest;
             int r_movement = abs(previous_floor - r->src) + abs(r->src - current_floor);
-            total_movement += r_movement;
+            l->total_movements += r_movement;
+
             FILE_LOG(l->logger, "Lift-%d Operation\n"
                                 "Previous Floor: %d\n"
                                 "Request: Floor %d to %d\n"
@@ -83,7 +86,7 @@ void* lift(void *ptr)
                                 "Current Position: Floor %d\n",
                                 l->id, previous_floor, r->src, r->dest,
                                 previous_floor, r->src, r->src, current_floor,
-                                r_movement, request_no, total_movement,
+                                r_movement, request_no, l->total_movements,
                                 current_floor);
             free(r);
         } else {
@@ -91,11 +94,7 @@ void* lift(void *ptr)
         }
     }
 
-    // need to return total number of movements
-    int *ret_total_movements = malloc(sizeof(int));
-    *ret_total_movements = total_movement;
     D_PRINTF("thread -> %ld has died\n", t);
-    D_PRINTF("thread total movements: %d\n", total_movement);
 
-    return ret_total_movements;
+    return NULL;
 }

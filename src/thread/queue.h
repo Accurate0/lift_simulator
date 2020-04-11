@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 
-#include "request.h"
+#include <common/request.h>
 
 struct node {
     struct node *next;

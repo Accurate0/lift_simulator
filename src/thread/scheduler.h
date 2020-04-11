@@ -8,6 +8,7 @@
 #include "log.h"
 
 struct scheduler {
+    int total_requests;
     FILE *input;
     struct queue *queue;
     struct logger *logger;
