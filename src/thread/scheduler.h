@@ -11,10 +11,10 @@ struct scheduler {
     int total_requests;
     FILE *input;
     struct queue *queue;
-    struct logger *logger;
+    struct log *logger;
 };
 
-struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct logger *logger);
+struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct log *logger);
 void scheduler_free(struct scheduler *s);
 void* scheduler(void *ptr);
 

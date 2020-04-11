@@ -2,7 +2,7 @@ CC=clang
 CFLAGS=-Wall -std=c99 -Wextra -pedantic -ggdb3 -O0
 CFLAGS+=-Isrc
 
-LDFLAGS_A=-pthread $(LDFLAGS)
+LDFLAGS_A=-lpthread $(LDFLAGS)
 LDFLAGS_B=-lrt $(LDFLAGS)
 
 EXEC_A=lift_sim_A
@@ -23,12 +23,6 @@ THREAD_OBJ=$(THREAD_SRC:$(THREAD_SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 PROCESS_SRC=$(wildcard $(PROCESS_SRC_DIR)/*.c)
 PROCESS_OBJ=$(PROCESS_SRC:$(PROCESS_SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-
-# SRC=$(wildcard $(SRC_DIR)/*.c)
-# OBJ=$(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-
-# RULE:
-# 	echo $(COMMON_SRC_DIR)
 
 .PHONY: all clean
 

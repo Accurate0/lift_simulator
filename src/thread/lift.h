@@ -9,10 +9,10 @@ struct lift {
     int lift_time;
     int total_movements;
     struct queue *queue;
-    struct logger *logger;
+    struct log *logger;
 };
 
-struct lift* lift_init(struct queue *queue, int lift_time, struct logger *logger, int id);
+struct lift* lift_init(struct queue *queue, int lift_time, struct log *logger, int id);
 void lift_free(struct lift *l);
 void *lift(void *ptr);
 #endif

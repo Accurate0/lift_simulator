@@ -12,7 +12,7 @@
 
 // #define ABS(n) ((n) < 0 ? -(n) : (n))
 
-struct lift* lift_init(struct queue *queue, int lift_time, struct logger *logger, int id)
+struct lift* lift_init(struct queue *queue, int lift_time, struct log *logger, int id)
 {
     struct lift *l = malloc(sizeof(struct lift));
     l->total_movements = 0;
@@ -29,7 +29,6 @@ void lift_free(struct lift *l)
     free(l);
 }
 
-// TODO: Pass a number representing which lift this is
 void* lift(void *ptr)
 {
     struct lift *l = (struct lift*)ptr;
@@ -66,6 +65,7 @@ void* lift(void *ptr)
             pthread_mutex_unlock(&l->queue->mutex);
 
             D_PRINTF("consumer working: %d %d sleeping for %d\n", r->src, r->dest, l->lift_time);
+            // Simulate work by putting the thread to sleep
             sleep(l->lift_time);
 
             request_no++;
@@ -74,20 +74,20 @@ void* lift(void *ptr)
             int r_movement = abs(previous_floor - r->src) + abs(r->src - current_floor);
             l->total_movements += r_movement;
 
-            FILE_LOG(l->logger, "Lift-%d Operation\n"
-                                "Previous Floor: %d\n"
-                                "Request: Floor %d to %d\n"
-                                "Details: \n"
-                                "\tGo from Floor %d to %d\n"
-                                "\tGo from Floor %d to %d\n"
-                                "\t# Movements: %d\n"
-                                "\tRequest No: %d\n"
-                                "\tTotal # Movement: %d\n"
-                                "Current Position: Floor %d\n",
-                                l->id, previous_floor, r->src, r->dest,
-                                previous_floor, r->src, r->src, current_floor,
-                                r_movement, request_no, l->total_movements,
-                                current_floor);
+            log_printf(l->logger, "Lift-%d Operation\n"
+                                  "Previous Floor: %d\n"
+                                  "Request: Floor %d to %d\n"
+                                  "Details: \n"
+                                  "\tGo from Floor %d to %d\n"
+                                  "\tGo from Floor %d to %d\n"
+                                  "\t# Movements: %d\n"
+                                  "\tRequest No: %d\n"
+                                  "\tTotal # Movement: %d\n"
+                                  "Current Position: Floor %d\n",
+                                  l->id, previous_floor, r->src, r->dest,
+                                  previous_floor, r->src, r->src, current_floor,
+                                  r_movement, request_no, l->total_movements,
+                                  current_floor);
             free(r);
         } else {
             pthread_mutex_unlock(&l->queue->mutex);

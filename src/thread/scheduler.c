@@ -12,7 +12,7 @@
 // Gets tasks from the queue/list
 // and put them into a "buffer"
 // read by the lift threads
-struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct logger *logger)
+struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct log *logger)
 {
     struct scheduler *s = malloc(sizeof(struct scheduler));
     s->total_requests = 0;
@@ -53,10 +53,10 @@ void* scheduler(void *ptr)
         if(r) {
             queue_add(s->queue, r);
             s->total_requests++;
-            FILE_LOG(s->logger, "------------------------------\n"
-                                "New Lift Request from %d to %d\n"
-                                "Request No: %d\n"
-                                "------------------------------\n", r->src, r->dest, s->total_requests);
+            log_printf(s->logger, "------------------------------\n"
+                                  "New Lift Request from %d to %d\n"
+                                  "Request No: %d\n"
+                                  "------------------------------\n", r->src, r->dest, s->total_requests);
             pthread_cond_signal(&s->queue->cond_empty);
         } else {
             // let everyone know we got nothing to put in

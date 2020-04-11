@@ -3,13 +3,14 @@
 #include <stdio.h>
 #include <pthread.h>
 
-struct logger {
+struct log {
     pthread_mutex_t mutex;
     FILE *fp;
 };
 
-struct logger* logger_init(FILE *fp);
-void logger_free(struct logger *l);
+struct log* log_init(FILE *fp);
+void log_free(struct log *l);
+void log_printf(struct log *l, const char *s, ...);
 
 #define FILE_LOG(l, s, ...)               \
     do {                                  \

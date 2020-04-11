@@ -6,13 +6,28 @@
 
 request_t* file_read_line(FILE *file)
 {
+    int src, dest;
     char buffer[BUFSIZ] = {0};
+
     if(!fgets(buffer, BUFSIZ, file)) {
         return NULL;
     }
 
+    int ret = sscanf(buffer, "%d %d", &src, &dest);
+    if(ret != 2) {
+        // incase 2 values weren't read from the line
+        return NULL;
+    }
+
+    // bounds check the input
+    if(src > 20 || dest > 20 || src < 1 || dest < 1) {
+        return NULL;
+    }
+
+
     request_t *req = malloc(sizeof(request_t));
-    sscanf(buffer, "%d %d", &req->src, &req->dest);
+    req->src = src;
+    req->dest = dest;
 
     return req;
 }

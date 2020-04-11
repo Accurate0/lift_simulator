@@ -12,8 +12,6 @@
 #include "log.h"
 
 // TODO: Add proccesses after threads is complete
-// TODO: Probably use #ifdef for that, not reason to
-// TODO: split into another file
 
 // TODO: Report
 
@@ -45,7 +43,7 @@ int main(int argc, const char *argv[])
     struct lift *lifts[TOTAL_LIFTS];
 
     struct queue *queue = queue_init(m);
-    struct logger *logger = logger_init(output);
+    struct log *logger = log_init(output);
 
     // thread 0 is task scheduler
     // thread 1 - TOTAL_THREADS are lift threads
@@ -64,15 +62,15 @@ int main(int argc, const char *argv[])
     }
 
     D_PRINTF("final : %d %d %d %d\n", s->total_requests, lifts[0]->total_movements,
-                                                         lifts[1]->total_movements
+                                                         lifts[1]->total_movements,
                                                          lifts[2]->total_movements);
 
     // Log the final stuff once the threads are dead
-    FILE_LOG(logger, "Total Number of Requests: %d\n"
-                     "Total Number of Movements: %d\n",
-                     s->total_requests, lifts[0]->total_movements
-                                      + lifts[1]->total_movements
-                                      + lifts[2]->total_movements);
+    log_printf(logger, "Total Number of Requests: %d\n"
+                       "Total Number of Movements: %d\n",
+                       s->total_requests, lifts[0]->total_movements
+                                        + lifts[1]->total_movements
+                                        + lifts[2]->total_movements);
 
     for(int i = 0; i < TOTAL_LIFTS; i++) {
         lift_free(lifts[i]);
@@ -81,7 +79,7 @@ int main(int argc, const char *argv[])
     fclose(input);
     fclose(output);
 
-    logger_free(logger);
+    log_free(logger);
     queue_free(queue);
     scheduler_free(s);
 

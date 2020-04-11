@@ -32,10 +32,11 @@ static struct node* node_init(request_t *data)
 
 void queue_add(struct queue *queue, request_t *ptr)
 {
-    struct node *node = node_init(ptr);
     if(queue->count == queue->max) {
         return;
     }
+
+    struct node *node = node_init(ptr);
 
     if(queue->tail == NULL) {
         queue->head = node;
