@@ -74,7 +74,7 @@ void* lift(void *ptr)
             int r_movement = abs(previous_floor - r->src) + abs(r->src - current_floor);
             l->total_movements += r_movement;
 
-            log_printf(l->logger, "Lift-%d Operation\n"
+            log_printf(l->logger, "\nLift-%d Operation\n"
                                   "Previous Floor: %d\n"
                                   "Request: Floor %d to %d\n"
                                   "Details: \n"
@@ -83,7 +83,7 @@ void* lift(void *ptr)
                                   "\t# Movements: %d\n"
                                   "\tRequest No: %d\n"
                                   "\tTotal # Movement: %d\n"
-                                  "Current Position: Floor %d\n",
+                                  "Current Position: Floor %d\n\n",
                                   l->id, previous_floor, r->src, r->dest,
                                   previous_floor, r->src, r->src, current_floor,
                                   r_movement, request_no, l->total_movements,

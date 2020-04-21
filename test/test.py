@@ -7,7 +7,7 @@ import shlex
 import subprocess
 from subprocess import DEVNULL
 
-EXEC = './lift_sim_A {} {} {}'
+EXEC = './lift_sim_{} {} {} {}'
 VALGRIND = 'valgrind --track-origins=yes \
                      --leak-check=full \
                      --show-leak-kinds=all \
@@ -20,10 +20,11 @@ QUEUE_SIZE = 5
 LIFT_TIME  = 0
 
 class Result(object):
-    def __init__(self, name, file, ret):
+    def __init__(self, name, file, ret, exe):
         self.name = name
         self.file = file
         self.ret = ret
+        self.exe = exe
 
 class TaskThread(Thread):
     def __init__(self, q: Queue, tasks: list):
@@ -34,8 +35,9 @@ class TaskThread(Thread):
     def run(self):
         for task in self._tasks:
             cmd = shlex.split(task)
+            # print(task)
             ret = subprocess.run(cmd, stdout=DEVNULL, stderr=DEVNULL)
-            self._q.put(Result(task, cmd[-1], ret.returncode))
+            self._q.put(Result(task, cmd[-1], ret.returncode, cmd[-4]))
 
         self._q.put('end')
 
@@ -47,19 +49,25 @@ def chunks(lst, n):
 
 def recompile():
     subprocess.run(shlex.split('make clean'))
-    subprocess.run(shlex.split('make VALGRIND=1'))
+    subprocess.run(shlex.split('make'))
 
 def main():
     recompile()
     files = [join(TEST_DIR, f) for f in listdir(TEST_DIR) if isfile(join(TEST_DIR, f))]
     maxlen = len(max(files, key=len))
 
-    total_tasks = [VALGRIND.format(EXEC.format(QUEUE_SIZE, LIFT_TIME, file)) for file in files] \
-                + [HELGRIND.format(EXEC.format(QUEUE_SIZE, LIFT_TIME, file)) for file in files] \
-                + [EXEC.format(QUEUE_SIZE, LIFT_TIME, file) for file in files]
+    total_tasks = [VALGRIND.format(EXEC.format('A', QUEUE_SIZE, LIFT_TIME, file)) for file in files] \
+                + [HELGRIND.format(EXEC.format('A', QUEUE_SIZE, LIFT_TIME, file)) for file in files] \
+                + [EXEC.format('A', QUEUE_SIZE, LIFT_TIME, file) for file in files]
+                # + [EXEC.format('B', QUEUE_SIZE, LIFT_TIME, file) for file in files]
+
+    # tasks done by a single thread in order
+    seq_tasks = [VALGRIND.format(EXEC.format('B', QUEUE_SIZE, LIFT_TIME, file)) for file in files] \
+                + [EXEC.format('B', QUEUE_SIZE, LIFT_TIME, file) for file in files]
 
     q = Queue()
-    threads = [TaskThread(q, chunk) for chunk in chunks(total_tasks, 10)]
+    threads = [TaskThread(q, chunk) for chunk in chunks(total_tasks, 10)] \
+            + [TaskThread(q, seq_tasks)]
 
     for thread in threads:
         thread.daemon = True
@@ -82,7 +90,7 @@ def main():
 
             file = ret.file + (' ' * (maxlen - len(ret.file)))
 
-            print(f'{name} {file} ', end='')
+            print(f'{ret.exe} {name} {file} ', end='')
 
             if ret.ret == 0:
                 print('\033[92m[pass]\033[0m')

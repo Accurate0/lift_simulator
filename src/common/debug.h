@@ -1,5 +1,5 @@
-#ifndef DEBUG_PRINTF_H
-#define DEBUG_PRINTF_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
 #ifdef DEBUG
     #define D_PRINTF(s, ...) fprintf(stderr, s, __VA_ARGS__)

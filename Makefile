@@ -3,7 +3,7 @@ CFLAGS=-Wall -std=c99 -Wextra -pedantic -ggdb3 -O0
 CFLAGS+=-Isrc
 
 LDFLAGS_A=-lpthread $(LDFLAGS)
-LDFLAGS_B=-lrt $(LDFLAGS)
+LDFLAGS_B=-lrt -lpthread $(LDFLAGS)
 
 EXEC_A=lift_sim_A
 EXEC_B=lift_sim_B

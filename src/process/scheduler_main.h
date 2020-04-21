@@ -1,5 +1,5 @@
 #ifndef SCHEDULER_MAIN_H
 #define SCHEDULER_MAIN_H
-
-int scheduler_main(const char *filename);
+#include <stdio.h>
+int scheduler_main(const char *filename, FILE *output);
 #endif

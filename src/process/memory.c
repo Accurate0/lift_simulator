@@ -8,6 +8,7 @@
 #include <fcntl.h>
 
 #include <common/request.h>
+#include <common/common.h>
 
 #include "memory.h"
 
@@ -32,9 +33,20 @@ struct shared_memory* shared_mem_create(int m)
 
     ptr->requests = mmap(0, sizeof(request_t) * m, PROT_WRITE, MAP_SHARED, req_list_fd, 0);
 
-    struct request r = { .src = 1, .dest = 2 };
+    ptr->current = 0;
+    ptr->max = m;
+    ptr->finished = false;
+    ptr->empty = true;
+    ptr->full = false;
+    ptr->head = -1;
+    ptr->tail = -1;
+    ptr->total_requests = 0;
+    for(int i = 0; i < TOTAL_LIFTS; i++) {
+        ptr->lift_movements[i] = 0;
+    }
+    // struct request r = { .src = 1, .dest = 2 };
 
-    ptr->requests[0] = r;
+    // ptr->requests[0] = r;
 
     return ptr;
 }
