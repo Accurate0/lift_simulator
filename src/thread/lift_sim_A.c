@@ -1,3 +1,15 @@
+/**
+ * @file lift_sim_A.c
+ * @author Anurag Singh (18944183)
+ *
+ * @date 09-05-20
+ *
+ * The main of the threads part, handles
+ * logging, queue and creation and
+ * destruction of threads.
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -11,21 +23,22 @@
 #include "lift.h"
 #include "log.h"
 
-// TODO: Add proccesses after threads is complete
-
 // TODO: Report
-
 // TODO: Commenting
-
 int main(int argc, const char *argv[])
 {
     if(argc < 4) {
-        fprintf(stderr, "usage: %s [queue size] [time] [filename]\n", argv[0]);
+        fprintf(stderr, "usage: %s [buffer size] [time] [filename]\n", argv[0]);
         return EXIT_FAILURE;
     }
 
     int m = atoi(argv[1]);
     int lift_time = atoi(argv[2]);
+
+    if(m <= 0 && lift_time < 0) {
+        fprintf(stderr, "buffer size >= 1, time > 0\n");
+        return EXIT_FAILURE;
+    }
 
     FILE *input = fopen(argv[3], "r");
     if(!input) {
@@ -35,6 +48,9 @@ int main(int argc, const char *argv[])
 
     FILE *output = fopen(OUTPUT_FILENAME, "w");
     if(!output) {
+        if(input) {
+            fclose(input);
+        }
         perror("output file");
         return EXIT_FAILURE;
     }

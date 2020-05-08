@@ -1,3 +1,11 @@
+/**
+ * @file cqueue.h
+ * @author Anurag Singh (18944183)
+ *
+ * @date 24-04-20
+ *
+ */
+
 #ifndef CQUEUE_H
 #define CQUEUE_H
 #include "memory.h"

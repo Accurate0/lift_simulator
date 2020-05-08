@@ -1,3 +1,11 @@
+/**
+ * @file memory.h
+ * @author Anurag Singh (18944183)
+ *
+ * @date 24-04-20
+ *
+ */
+
 #ifndef MEMORY_H
 #define MEMORY_H
 #include <stdbool.h>
@@ -6,6 +14,15 @@
 #include <common/request.h>
 #include <common/common.h>
 
+#define SHARED_MEMORY_NAME          "shared_mem"
+#define SHARED_MEMORY_REQUESTS      "requests_list"
+
+/**
+ * kinda like the stack of
+ * memory that'll be shared
+ * across processes, also contains
+ * the shared semaphores in a separate struct
+ */
 struct shared_memory {
     request_t *requests;
     int max;
@@ -28,10 +45,7 @@ struct shared_memory {
     } semaphore;
 };
 
-#define SHARED_MEMORY_NAME          "shared_mem"
-#define SHARED_MEMORY_REQUESTS      "requests_list"
-
-void shared_memory_destroy(struct shared_memory *sm, int m);
 struct shared_memory* shared_mem_create(int m);
+void shared_memory_destroy(struct shared_memory *sm, int m);
 
 #endif

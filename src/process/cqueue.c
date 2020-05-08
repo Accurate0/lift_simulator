@@ -1,7 +1,24 @@
+/**
+ * @file cqueue.c
+ * @author Anurag Singh (18944183)
+ *
+ * @date 24-04-20
+ *
+ * A simple circular queue "implementation"
+ *
+ */
+
 #include <common/request.h>
 
 #include "memory.h"
 
+/**
+ * Add a request to the queue stored in
+ * the shared memory param
+ *
+ * @param sm shared memory struct
+ * @param r request to add to queue
+ */
 void sm_cqueue_add(struct shared_memory *sm, request_t r)
 {
     if(sm->head == -1) {
@@ -23,7 +40,12 @@ void sm_cqueue_add(struct shared_memory *sm, request_t r)
     sm->requests[sm->tail] = r;
 }
 
-
+/**
+ * Remove a request from the queue
+ *
+ * @param sm memory to remove from
+ * @return request_t
+ */
 request_t sm_cqueue_remove(struct shared_memory *sm)
 {
     request_t r = sm->requests[sm->head];

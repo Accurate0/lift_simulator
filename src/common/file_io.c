@@ -1,9 +1,30 @@
+/**
+ * @file file_io.c
+ * @author Anurag Singh (18944183)
+ *
+ * @date 24-04-20
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "common.h"
 #include "file_io.h"
 #include "request.h"
 
+/**
+ * This function reads a line
+ * from the input file, parses it
+ * in the format specified, and
+ * does a simple sanity check to
+ * ensure that its valid, before
+ * malloc'ing a struct and returning
+ * it containing the values read.
+ *
+ * @param file to read the line from
+ * @return malloc'd request_t* containing the values
+ */
 request_t* file_read_line(FILE *file)
 {
     int src, dest;
@@ -20,10 +41,9 @@ request_t* file_read_line(FILE *file)
     }
 
     // bounds check the input
-    if(src > 20 || dest > 20 || src < 1 || dest < 1) {
+    if(src > MAX_FLOOR || dest > MAX_FLOOR || src < MIN_FLOOR || dest < MIN_FLOOR) {
         return NULL;
     }
-
 
     request_t *req = malloc(sizeof(request_t));
     req->src = src;
@@ -31,33 +51,3 @@ request_t* file_read_line(FILE *file)
 
     return req;
 }
-
-#if 0
-list_t* read_input(const char *filename)
-{
-    FILE *f = fopen(filename, "r");
-
-    if(!f) {
-        return NULL;
-    }
-
-    list_t *list = list_init();
-    // BUFSIZ from libc
-    char buffer[BUFSIZ] = {0};
-    // int src, dest;
-
-    while(!feof(f)) {
-        if(fgets(buffer, BUFSIZ, f)) {
-            request_t *req = malloc(sizeof(request_t));
-
-            sscanf(buffer, "%d %d", &req->src, &req->dest);
-
-            list_add_end(list, node_init(req));
-        }
-    }
-
-    fclose(f);
-
-    return list;
-}
-#endif

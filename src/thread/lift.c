@@ -39,7 +39,7 @@ void* lift(void *ptr)
 
 #ifdef DEBUG
     pthread_t t = pthread_self();
-    D_PRINTF("consumer created: %ld\n", t);
+    D_PRINTF("consumer created: %d\n", l->id);
 #endif
 
     while(1) {
@@ -53,20 +53,18 @@ void* lift(void *ptr)
         }
 
         while(l->queue->empty && !l->queue->finished) {
-            D_PRINTF("consumer waiting: %ld\n", t);
+            D_PRINTF("consumer waiting: %d\n", l->id);
             pthread_cond_wait(&l->queue->cond_empty, &l->queue->mutex);
         }
 
         if(!l->queue->empty) {
-            D_PRINTF("consumer accessing queue: %ld\n", t);
+            D_PRINTF("consumer accessing queue: %d\n", l->id);
             request_t *r = queue_remove(l->queue);
             // need to let scheduler thread know that there's space now in the queue
             pthread_cond_signal(&l->queue->cond_full);
             pthread_mutex_unlock(&l->queue->mutex);
 
             D_PRINTF("consumer working: %d %d sleeping for %d\n", r->src, r->dest, l->lift_time);
-            // Simulate work by putting the thread to sleep
-            sleep(l->lift_time);
 
             request_no++;
             previous_floor = current_floor;
@@ -74,7 +72,7 @@ void* lift(void *ptr)
             int r_movement = abs(previous_floor - r->src) + abs(r->src - current_floor);
             l->total_movements += r_movement;
 
-            log_printf(l->logger, "\nLift-%d Operation\n"
+            log_printf(l->logger, "Lift-%d Operation\n"
                                   "Previous Floor: %d\n"
                                   "Request: Floor %d to %d\n"
                                   "Details: \n"
@@ -88,7 +86,10 @@ void* lift(void *ptr)
                                   previous_floor, r->src, r->src, current_floor,
                                   r_movement, request_no, l->total_movements,
                                   current_floor);
+
+            sleep(l->lift_time);
             free(r);
+            // Simulate work by putting the thread to sleep
         } else {
             pthread_mutex_unlock(&l->queue->mutex);
         }

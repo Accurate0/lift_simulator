@@ -1,4 +1,17 @@
-// ftruncate
+/**
+ * @file lift_sim_B.c
+ * @author Anurag Singh (18944183)
+ *
+ * @date 24-04-20
+ *
+ * The actual main of the process part
+ * Loads up shared memory, and setups up
+ * to fork and create child processes,
+ * while also waiting for them to
+ * die so we can clean up afterwards
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -18,12 +31,17 @@
 int main(int argc, const char *argv[])
 {
     if(argc < 4) {
-        fprintf(stderr, "usage: %s [queue size] [time] [filename]\n", argv[0]);
+        fprintf(stderr, "usage: %s [buffer size] [time] [filename]\n", argv[0]);
         return EXIT_FAILURE;
     }
 
     int m = atoi(argv[1]);
     int lift_time = atoi(argv[2]);
+
+    if(m <= 0 && lift_time < 0) {
+        fprintf(stderr, "buffer size >= 1, time > 0\n");
+        return EXIT_FAILURE;
+    }
 
     FILE *output = fopen(OUTPUT_FILENAME, "w");
     if(!output) {
@@ -33,14 +51,11 @@ int main(int argc, const char *argv[])
 
     // Shared Memory
     struct shared_memory *sm = shared_mem_create(m);
-    sem_init(&sm->semaphore.empty, 1, m);
-    sem_init(&sm->semaphore.full, 1, 0);
-    sem_init(&sm->semaphore.mutex, 1, 1);
-    sem_init(&sm->semaphore.file, 1, 1);
 
     pid_t lifts[TOTAL_LIFTS];
     pid_t scheduler;
 
+    // TODO: Add error checking to fork()
     for(int i = 0; i < TOTAL_LIFTS; i++) {
         if((lifts[i] = fork()) == 0) {
             // Child
@@ -68,12 +83,8 @@ int main(int argc, const char *argv[])
                                         + sm->lift_movements[1]
                                         + sm->lift_movements[2]);
 
-    sem_destroy(&sm->semaphore.mutex);
-    sem_destroy(&sm->semaphore.empty);
-    sem_destroy(&sm->semaphore.full);
-    sem_destroy(&sm->semaphore.file);
-    shared_memory_destroy(sm, m);
 
+    shared_memory_destroy(sm, m);
 
     fclose(output);
 

@@ -8,6 +8,8 @@
 
 #include "scheduler.h"
 
+// TODO: Figure out why printing is sometimes 3 tasks added
+
 // This is the scheduler thread
 // Gets tasks from the queue/list
 // and put them into a "buffer"
@@ -51,12 +53,13 @@ void* scheduler(void *ptr)
 
         request_t *r = file_read_line(s->input);
         if(r) {
+            D_PRINTF("prod: added : %d %d\n", r->src, r->dest);
             queue_add(s->queue, r);
             s->total_requests++;
             log_printf(s->logger, "------------------------------\n"
                                   "New Lift Request from %d to %d\n"
                                   "Request No: %d\n"
-                                  "------------------------------\n", r->src, r->dest, s->total_requests);
+                                  "------------------------------\n\n", r->src, r->dest, s->total_requests);
             pthread_cond_signal(&s->queue->cond_empty);
         } else {
             // let everyone know we got nothing to put in
