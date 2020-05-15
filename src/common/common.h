@@ -1,11 +1,3 @@
-/**
- * @file common.h
- * @author Anurag Singh (18944183)
- *
- * @date 24-04-20
- *
- */
-
 #ifndef COMMON_H
 #define COMMON_H
 /**
@@ -17,5 +9,7 @@
 #define TOTAL_LIFTS             3
 #define MAX_FLOOR               20
 #define MIN_FLOOR               1
+#define MIN_INPUT               50
+#define MAX_INPUT               100
 
 #endif

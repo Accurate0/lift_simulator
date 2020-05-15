@@ -1,3 +1,14 @@
+/**
+ * @file lift.c
+ * @author Anurag Singh (18944183)
+ *
+ * @date 09-05-20
+ *
+ * Handles lift struct and the lift
+ * function itself
+ *
+ */
+
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -10,8 +21,16 @@
 #include "queue.h"
 #include "log.h"
 
-// #define ABS(n) ((n) < 0 ? -(n) : (n))
-
+/**
+ * Creates a lift struct with
+ * fields initialised to import params
+ *
+ * @param queue
+ * @param lift_time
+ * @param logger
+ * @param id
+ * @return struct lift*
+ */
 struct lift* lift_init(struct queue *queue, int lift_time, struct log *logger, int id)
 {
     struct lift *l = malloc(sizeof(struct lift));
@@ -24,11 +43,24 @@ struct lift* lift_init(struct queue *queue, int lift_time, struct log *logger, i
     return l;
 }
 
+/**
+ * Frees lift struct pointed to by l
+ *
+ * @param l lift struct to be free'd
+ */
 void lift_free(struct lift *l)
 {
     free(l);
 }
 
+/**
+ * Lift function passed to pthread_create
+ * Handles all mutual exclusion and simulates
+ * work by sleeping
+ *
+ * @param ptr points to the lift struct
+ * @return void*
+ */
 void* lift(void *ptr)
 {
     struct lift *l = (struct lift*)ptr;

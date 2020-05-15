@@ -1,23 +1,23 @@
 \documentclass[12pt,titlepage]{article}
 \usepackage{geometry}
-% \usepackage{minted}
+\usepackage{minted}
 \usepackage[T1]{fontenc}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{amsmath}
+\usepackage{appendix}
 % \usepackage{listings}
 
+\setminted[c]{linenos, frame=single, breaklines}
+\setminted[md]{linenos, frame=single, breaklines}
 
 % \usemintedstyle{friendly}
 % a4paper is 210 by 297
-\geometry{a4paper, total={160mm,242mm}}
+\geometry{a4paper, total={170mm,242mm}}
 \setlength{\parindent}{0em}
 \setlength{\parskip}{0.5em}
-%\begin{minted}[linenos=true]{c}
-  %\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
-  %\definecolor{friendlybg}{HTML}{f0f0f0}
 
 \begin{document}
 \hypersetup{pageanchor=false}
@@ -42,23 +42,117 @@
 \pagenumbering{arabic}
 \hypersetup{pageanchor=true}
 
-% A signed cover page that explicitly states the submitted assignment is your own work.
-% The cover includes the words “Operating Systems Assignment”, and your name in the
-% form: family, other names. Your name should be as recorded in the student database.
+\section{Mutual Exclusion and Shared Resources}
+\subsection{Threads}
+Mutual exclusion is done using pthread mutexes the queue struct contains a mutex that is used to protect the data inside the queue, this mutex must be acquired before manipulating queue data to ensure mutual exclusion, this queue is shared between the scheduler thread and the 3 lift threads, and if any of them wish to mutate the queue in any way (removing or adding) they must first acquire mutex.
 
-% • Software solution of your assignment that includes (i) all source code for the
-% programs with proper in-line and header documentation. Use proper indentation so
-% that your code can be easily read. Make sure that you use meaningful variable names,
-% and delete all unnecessary comments that you created while debugging your program;
-% and (ii) readme file that, among others, explains how to compile your program and
-% how to run the program.
+2 conditions are also used to allow some basic communication between threads, the conditions are when the queue is empty or full, if the queue is empty the lift threads wait until the scheduler adds something to the queue, and signals the condition waking up a sleeping thread to reacquire the mutex and to process the data, and in the case of the queue been full.
 
-% • Detailed discussion on how any mutual exclusion is achieved and what processes /
-% threads access the shared resources.
+\begin{minted}{c}
+...
+pthread_mutex_lock(&l->queue->mutex);
+...
 
-% • Description of any cases for which your program is not working correctly or how you
-% test your program that make you believe it works perfectly.
+while(l->queue->empty && !l->queue->finished) {
+    pthread_cond_wait(&l->queue->cond_empty, &l->queue->mutex);
+}
 
-% • Sample inputs and outputs from your running programs.
+if(!l->queue->empty) {
+    request_t *r = queue_remove(l->queue);
+    pthread_cond_signal(&l->queue->cond_full);
+    pthread_mutex_unlock(&l->queue->mutex);
+...
+\end{minted}
+
+
+The scheduler waits on a full condition which is signaled by any of the 3 lift threads when they remove something from the queue, letting the scheduler know that there is space now and it can wake up an reacquire the mutex to add more into the queue.
+
+\begin{minted}{c}
+...
+pthread_mutex_lock(&s->queue->mutex);
+
+while(s->queue->full) {
+    pthread_cond_wait(&s->queue->cond_full, &s->queue->mutex);
+}
+
+request_t *r = file_read_line(s->input);
+if(r) {
+    queue_add(s->queue, r);
+...
+pthread_mutex_unlock(&s->queue->mutex);
+...
+\end{minted}
+
+\subsection{Processes}
+
+
+\newpage
+\section{Testing - Processes}
+\subsection{Example 1}
+\subsection{Example 2}
+\section{Testing - Threads}
+\subsection{Example 1}
+\texttt{./lift\_sim\_A 3 1 test/inputs/small.txt}
+
+Input found at \texttt{test/inputs/small.txt}
+
+Output found at \texttt{examples/threads/small.out}
+
+The input files has a total of 6 requests, and the output records going through 6 requests, since this is a smaller text file, the output file can be inspected easily to determine if the program is working or not.
+
+\subsection{Example 2}
+\texttt{./lift\_sim\_A 5 1 test/inputs/test1.txt}
+
+Input found at \texttt{test/inputs/test1.txt}
+
+Output found at \texttt{examples/threads/test1.out}
+
+The input files has a total of 50 requests, and the output records going through 50 requests.
+\newpage
+
+\begin{appendices}
+    \section{Source Code}
+    \subsection{README.md}
+    \inputminted{md}{../README.md}
+    \newpage
+    \subsection{Common}
+    \subsubsection{common.h}
+    \inputminted{c}{../src/common/common.h}
+    \subsubsection{file\_io}
+    \inputminted{c}{../src/common/file_io.h}
+    \inputminted{c}{../src/common/file_io.c}
+    \subsubsection{request.h}
+    \inputminted{c}{../src/common/request.h}
+    \subsection{Processes}
+    \subsubsection{cqueue}
+    \inputminted{c}{../src/process/cqueue.h}
+    \inputminted{c}{../src/process/cqueue.c}
+    \subsubsection{lift\_main}
+    \inputminted{c}{../src/process/lift_main.h}
+    \inputminted{c}{../src/process/lift_main.c}
+    \subsubsection{memory}
+    \inputminted{c}{../src/process/memory.h}
+    \inputminted{c}{../src/process/memory.c}
+    \subsubsection{scheduler\_main}
+    \inputminted{c}{../src/process/scheduler_main.h}
+    \inputminted{c}{../src/process/scheduler_main.c}
+    \subsubsection{lift\_sim\_B}
+    \inputminted{c}{../src/process/lift_sim_B.c}
+    \subsection{Threads}
+    \subsubsection{lift}
+    \inputminted{c}{../src/thread/lift.h}
+    \inputminted{c}{../src/thread/lift.c}
+    \subsubsection{log}
+    \inputminted{c}{../src/thread/log.h}
+    \inputminted{c}{../src/thread/log.c}
+    \subsubsection{queue}
+    \inputminted{c}{../src/thread/queue.h}
+    \inputminted{c}{../src/thread/queue.c}
+    \subsubsection{scheduler}
+    \inputminted{c}{../src/thread/scheduler.h}
+    \inputminted{c}{../src/thread/scheduler.c}
+    \subsubsection{lift\_sim\_A}
+    \inputminted{c}{../src/thread/lift_sim_A.c}
+\end{appendices}
 
 \end{document}

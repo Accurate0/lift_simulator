@@ -1,11 +1,3 @@
-/**
- * @file debug.h
- * @author Anurag Singh (18944183)
- *
- * @date 24-04-20
- *
- */
-
 #ifndef DEBUG_H
 #define DEBUG_H
 

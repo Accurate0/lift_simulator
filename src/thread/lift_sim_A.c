@@ -23,8 +23,6 @@
 #include "lift.h"
 #include "log.h"
 
-// TODO: Report
-// TODO: Commenting
 int main(int argc, const char *argv[])
 {
     if(argc < 4) {
@@ -36,7 +34,7 @@ int main(int argc, const char *argv[])
     int lift_time = atoi(argv[2]);
 
     if(m <= 0 && lift_time < 0) {
-        fprintf(stderr, "buffer size >= 1, time > 0\n");
+        fprintf(stderr, "buffer size > 0, time >= 0\n");
         return EXIT_FAILURE;
     }
 
@@ -48,10 +46,17 @@ int main(int argc, const char *argv[])
 
     FILE *output = fopen(OUTPUT_FILENAME, "w");
     if(!output) {
-        if(input) {
-            fclose(input);
-        }
+        fclose(input);
         perror("output file");
+        return EXIT_FAILURE;
+    }
+
+    bool valid = file_validate(input);
+    if(!valid) {
+        fclose(input);
+        fclose(output);
+
+        fprintf(stderr, "invalid input file: %s\n", argv[3]);
         return EXIT_FAILURE;
     }
 
@@ -77,9 +82,10 @@ int main(int argc, const char *argv[])
         pthread_join(threads[i], NULL);
     }
 
-    D_PRINTF("final : %d %d %d %d\n", s->total_requests, lifts[0]->total_movements,
-                                                         lifts[1]->total_movements,
-                                                         lifts[2]->total_movements);
+    D_PRINTF("final : %d %d %d %d\n", s->total_requests,
+                lifts[0]->total_movements,
+                lifts[1]->total_movements,
+                lifts[2]->total_movements);
 
     // Log the final stuff once the threads are dead
     log_printf(logger, "Total Number of Requests: %d\n"

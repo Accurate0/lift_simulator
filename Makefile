@@ -1,4 +1,4 @@
-CC=clang
+CC=gcc
 CFLAGS=-Wall -std=c99 -Wextra -pedantic -ggdb3 -O0
 CFLAGS+=-Isrc
 
@@ -32,8 +32,7 @@ LDFLAGS+=-fsanitize=thread
 endif
 
 ifdef ASAN
-CFLAGS+=-fsanitize=address,unsigned-integer-overflow,nullability,float-divide-by-zero,undefined
-CFLAGS+=-fsanitize-address-use-after-scope
+CFLAGS+=-fsanitize=address
 LDFLAGS+=-fsanitize=address -lubsan
 endif
 
@@ -42,11 +41,8 @@ CFLAGS+=-D DEBUG
 DEBUG: clean all
 endif
 
-# CFLAGS+=-fsanitize=address
-
 all: $(EXEC_A) $(EXEC_B)
 
-# Filter out the opposing main
 $(EXEC_A): $(COMMON_OBJ) $(THREAD_OBJ)
 	$(CC) $^ -o $@ $(LDFLAGS_A)
 

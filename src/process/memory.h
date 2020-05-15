@@ -1,11 +1,3 @@
-/**
- * @file memory.h
- * @author Anurag Singh (18944183)
- *
- * @date 24-04-20
- *
- */
-
 #ifndef MEMORY_H
 #define MEMORY_H
 #include <stdbool.h>
@@ -37,7 +29,7 @@ struct shared_memory {
     bool empty;
     bool full;
 
-    struct semaphore {
+    struct {
         sem_t full;
         sem_t empty;
         sem_t mutex;

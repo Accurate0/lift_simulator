@@ -1,3 +1,15 @@
+/**
+ * @file scheduler.c
+ * @author Anurag Singh (18944183)
+ *
+ * @date 09-05-20
+ *
+ * Handles all scheduler based actions
+ * including allocating the structure
+ * and the function passed to pthread_create
+ *
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
@@ -8,12 +20,15 @@
 
 #include "scheduler.h"
 
-// TODO: Figure out why printing is sometimes 3 tasks added
-
-// This is the scheduler thread
-// Gets tasks from the queue/list
-// and put them into a "buffer"
-// read by the lift threads
+/**
+ * Create a scheduler struct, initialising struct
+ * fields to imported variables
+ *
+ * @param input
+ * @param queue
+ * @param logger
+ * @return struct scheduler*
+ */
 struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct log *logger)
 {
     struct scheduler *s = malloc(sizeof(struct scheduler));
@@ -25,11 +40,24 @@ struct scheduler* scheduler_init(FILE *input, struct queue *queue, struct log *l
     return s;
 }
 
+/**
+ * Frees a scheduler struct
+ *
+ * @param s
+ */
 void scheduler_free(struct scheduler *s)
 {
     free(s);
 }
 
+/**
+ * Function passed to pthread_create
+ * in order to create a scheduler struct
+ * Contains all mutual exclusion required
+ *
+ * @param ptr scheduler struct
+ * @return void*
+ */
 void* scheduler(void *ptr)
 {
     struct scheduler *s = (struct scheduler *)ptr;

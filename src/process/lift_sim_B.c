@@ -39,13 +39,29 @@ int main(int argc, const char *argv[])
     int lift_time = atoi(argv[2]);
 
     if(m <= 0 && lift_time < 0) {
-        fprintf(stderr, "buffer size >= 1, time > 0\n");
+        fprintf(stderr, "buffer size > 0, time >= 0\n");
         return EXIT_FAILURE;
     }
 
     FILE *output = fopen(OUTPUT_FILENAME, "w");
     if(!output) {
         perror("output file");
+        return EXIT_FAILURE;
+    }
+
+    FILE *input = fopen(argv[3], "r");
+    if(!input) {
+        perror("input file");
+        return EXIT_FAILURE;
+    }
+
+    bool valid = file_validate(input);
+    fclose(input);
+
+    if(!valid) {
+        fclose(output);
+
+        fprintf(stderr, "invalid input file: %s\n", argv[3]);
         return EXIT_FAILURE;
     }
 
