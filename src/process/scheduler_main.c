@@ -18,7 +18,6 @@
 #include <fcntl.h>
 
 #include <common/file_io.h>
-#include <common/debug.h>
 
 #include "memory.h"
 #include "cqueue.h"
@@ -27,7 +26,6 @@
 int scheduler_main(const char *filename, FILE *output)
 {
     bool finished = false;
-    D_PRINTF("sched %d : created\n", getpid());
     int shm_fd = shm_open(SHARED_MEMORY_NAME, O_RDWR, 0666);
     int req_fd = shm_open(SHARED_MEMORY_REQUESTS, O_RDWR, 0666);
     struct shared_memory *sm = mmap(0, sizeof(struct shared_memory), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
@@ -45,17 +43,14 @@ int scheduler_main(const char *filename, FILE *output)
         sem_post(&sm->semaphore.full);
         perror("input file");
         fclose(output);
-        return 0;
+        return EXIT_FAILURE;
     }
 
     while(!finished) {
         request_t *r = file_read_line(fp);
         if(r) {
-            D_PRINTF("sched %d : waiting on mutex\n", getpid());
             sem_wait(&sm->semaphore.empty);
             sem_wait(&sm->semaphore.mutex);
-            D_PRINTF("sched %d : mutex grabbed\n", getpid());
-            D_PRINTF("sched : read: %d %d\n", r->src, r->dest);
             sm->total_requests++;
             sm_cqueue_add(sm, *r);
 
@@ -69,7 +64,6 @@ int scheduler_main(const char *filename, FILE *output)
 
             sem_post(&sm->semaphore.mutex);
             sem_post(&sm->semaphore.full);
-            D_PRINTF("sched %d : mutex released\n", getpid());
 
             free(r);
         } else {
@@ -81,7 +75,6 @@ int scheduler_main(const char *filename, FILE *output)
 
     }
 
-    D_PRINTF("sched %d : dead\n", getpid());
     fclose(fp);
     fclose(output);
 

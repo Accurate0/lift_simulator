@@ -74,7 +74,8 @@ def main():
         thread.start()
 
     n = 0
-    while ret := q.get():
+    while True:
+        ret = q.get()
         if type(ret) is str:
             n += 1
             if n == len(threads):

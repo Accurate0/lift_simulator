@@ -16,7 +16,6 @@
 
 #include <common/file_io.h>
 #include <common/request.h>
-#include <common/debug.h>
 
 #include "scheduler.h"
 
@@ -63,25 +62,16 @@ void* scheduler(void *ptr)
     struct scheduler *s = (struct scheduler *)ptr;
     bool finished = false;
 
-#ifdef DEBUG
-    pthread_t t = pthread_self();
-    D_PRINTF("prod created: %ld\n", t);
-#endif
-
     while(!finished) {
         pthread_mutex_lock(&s->queue->mutex);
 
-        D_PRINTF("prod: q rn: %d\n", s->queue->count);
-
         while(s->queue->full) {
             // if queue at max capacity, wait for someone to dequeue
-            D_PRINTF("prod: q at max: %d\n", s->queue->count);
             pthread_cond_wait(&s->queue->cond_full, &s->queue->mutex);
         }
 
         request_t *r = file_read_line(s->input);
         if(r) {
-            D_PRINTF("prod: added : %d %d\n", r->src, r->dest);
             queue_add(s->queue, r);
             s->total_requests++;
             log_printf(s->logger, "------------------------------\n"
@@ -99,8 +89,6 @@ void* scheduler(void *ptr)
 
         pthread_mutex_unlock(&s->queue->mutex);
     }
-
-    D_PRINTF("prod has died %s\n",  "lol");
 
     return NULL;
 }

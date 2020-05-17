@@ -8,6 +8,7 @@
 \usepackage{fancyhdr}
 \usepackage{amsmath}
 \usepackage{appendix}
+\usepackage{pdfpages}
 % \usepackage{listings}
 
 \setminted[c]{linenos, frame=single, breaklines}
@@ -20,6 +21,7 @@
 \setlength{\parskip}{0.5em}
 
 \begin{document}
+\includepdf[pages=-]{../declaration_of_originality.pdf}
 \hypersetup{pageanchor=false}
 
 \begin{titlepage}
@@ -84,30 +86,105 @@ pthread_mutex_unlock(&s->queue->mutex);
 \end{minted}
 
 \subsection{Processes}
+A logic similar to threads exists in processes but requires the use of shared memory and semaphores since processes do not share memory mappings the way threads do.
 
+I used POSIX shared memory and semaphores in order to implement shared resources and mutual exclusion. The bounded buffer problem can be solved through the use of 3 semaphores, one acting as a signal for full, another as a signal for empty, and the final used as a mutex to protect the shared memory (I also had another to protected accesses to the output file). The semaphores are initialised to different values.
+
+\begin{minted}{c}
+sem_init(&ptr->semaphore.empty, 1, m);
+sem_init(&ptr->semaphore.full, 1, 0);
+sem_init(&ptr->semaphore.mutex, 1, 1);
+sem_init(&ptr->semaphore.file, 1, 1);
+\end{minted}
+
+The empty semaphore marks how many empty locations are in the buffer, the full semaphore marks how many are full, the mutex is used as a binary semaphore to protect the shared memory and same for the file semaphore to protect the file IO.
+
+The scheduler must wait on the empty mutex to be available in order to add something into the shared memory, and once it has added something the scheduler posts the full mutex to allow a lift process to wake up and take one from the queue, once the lift is done it posts another empty, which will allow the scheduler back on if the queue was completely full prior.
+
+The mutex semaphore is used to protect the shared memory by enforcing mutual exclusion by only allowing a single process to modify the data in the shared memory.
+
+In terms of the shared resources, there was an array of requests which was used as a circular queue, and the semaphores were also shared, along with some statistics that need to be printed such as total requests and the movement counts of each individual lift.
+
+These resources were shared through the use of the POSIX shared memory API, this API required you to open a shared memory object with a name, use \texttt{ftruncate} to set the size of the shared memory object, and to use \texttt{mmap} to map the memory object into the address space of the current process. This was done once to create the shared memory by the main, and then each process mapped the same block of shared memory into their own address space.
+
+Once the processes have been \texttt{wait}ed on, the shared memory is unmapped and the memory objects are unlinked.
+
+The output \texttt{FILE} isn't included in the shared memory since according to the manual page for \texttt{fork}, the open file descriptors are shared across child processes, therefore the parent simply opens it, and each child will close it when they're done, and same for the parent.
 
 \newpage
 \section{Testing - Processes}
+Each test file is a different size between the allowed values of 50 and 100.
 \subsection{Example 1}
+Testing with a buffer size larger than the number of threads, and relatively small sleep time to see if the program behaves as expected. Through manual inspection of the output, it can be surmised that the program works as expected.
+
+\paragraph{Command}\texttt{./lift\_sim\_B 4 2 test/inputs/test2.txt}
+
+\paragraph{Input}
+\texttt{test/inputs/test2.txt}
+
+\paragraph{Output}
+\texttt{examples/process/test2.out}
+
 \subsection{Example 2}
+Testing with a significantly larger buffer size but with a sleep time of 0 to see if mutual exclusion still exists in the case of the ``work'' being done quickly. Manual inspection reveals the expected output, and since there was a final output, it means there was no deadlock while acquiring resources.
+
+\paragraph{Command}\texttt{./lift\_sim\_B 10 0 test/inputs/test7.txt}
+
+\paragraph{Input}
+\texttt{test/inputs/test7.txt}
+
+\paragraph{Output}
+\texttt{examples/process/test7.out}
+
+\subsection{Example 3}
+A very large buffer size with a long sleep time to demonstrate another possible situation where the program works as expected.
+
+\paragraph{Command}\texttt{./lift\_sim\_B 20 5 test/inputs/test21.txt}
+
+\paragraph{Input}
+\texttt{test/inputs/test21.txt}
+
+\paragraph{Output}
+\texttt{examples/process/test21.out}
+
+\newpage
 \section{Testing - Threads}
+Each test file is a different size between the allowed values of 50 and 100.
 \subsection{Example 1}
-\texttt{./lift\_sim\_A 3 1 test/inputs/small.txt}
+A buffer size equal to to the number of worker threads with a relatively short ``working'' time.
 
-Input found at \texttt{test/inputs/small.txt}
+\paragraph{Command}\texttt{./lift\_sim\_A 3 1 test/inputs/test34.txt}
 
-Output found at \texttt{examples/threads/small.out}
+\paragraph{Input}
+\texttt{test/inputs/test34.txt}
 
-The input files has a total of 6 requests, and the output records going through 6 requests, since this is a smaller text file, the output file can be inspected easily to determine if the program is working or not.
+\paragraph{Output}
+\texttt{examples/threads/test34.out}
+
 
 \subsection{Example 2}
-\texttt{./lift\_sim\_A 5 1 test/inputs/test1.txt}
+Larger buffer with the same time.
 
-Input found at \texttt{test/inputs/test1.txt}
+\paragraph{Command}\texttt{./lift\_sim\_A 5 1 test/inputs/test1.txt}
 
-Output found at \texttt{examples/threads/test1.out}
+\paragraph{Input}
+\texttt{test/inputs/test1.txt}
 
-The input files has a total of 50 requests, and the output records going through 50 requests.
+\paragraph{Output}
+\texttt{examples/threads/test1.out}
+
+
+\subsection{Example 3}
+Even larger buffer with a zero time to ensure mutual exclusion happens even without the threads sleeping.
+
+\paragraph{Command}\texttt{./lift\_sim\_A 10 0 test/inputs/test10.txt}
+
+\paragraph{Input}
+\texttt{test/inputs/test10.txt}
+
+\paragraph{Output}
+\texttt{examples/threads/test10.out}
+
 \newpage
 
 \begin{appendices}

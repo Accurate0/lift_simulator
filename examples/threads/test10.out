@@ -1,0 +1,946 @@
+------------------------------
+New Lift Request from 5 to 7
+Request No: 1
+------------------------------
+
+------------------------------
+New Lift Request from 7 to 1
+Request No: 2
+------------------------------
+
+------------------------------
+New Lift Request from 18 to 19
+Request No: 3
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 1
+Request: Floor 5 to 7
+Details: 
+	Go from Floor 1 to 5
+	Go from Floor 5 to 7
+	# Movements: 6
+	Request No: 1
+	Total # Movement: 6
+Current Position: Floor 7
+
+Lift-2 Operation
+Previous Floor: 1
+Request: Floor 7 to 1
+Details: 
+	Go from Floor 1 to 7
+	Go from Floor 7 to 1
+	# Movements: 12
+	Request No: 1
+	Total # Movement: 12
+Current Position: Floor 1
+
+------------------------------
+New Lift Request from 19 to 1
+Request No: 4
+------------------------------
+
+------------------------------
+New Lift Request from 1 to 3
+Request No: 5
+------------------------------
+
+------------------------------
+New Lift Request from 8 to 16
+Request No: 6
+------------------------------
+
+------------------------------
+New Lift Request from 17 to 18
+Request No: 7
+------------------------------
+
+------------------------------
+New Lift Request from 9 to 19
+Request No: 8
+------------------------------
+
+------------------------------
+New Lift Request from 14 to 4
+Request No: 9
+------------------------------
+
+------------------------------
+New Lift Request from 11 to 6
+Request No: 10
+------------------------------
+
+------------------------------
+New Lift Request from 12 to 10
+Request No: 11
+------------------------------
+
+------------------------------
+New Lift Request from 4 to 5
+Request No: 12
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 1
+Request: Floor 18 to 19
+Details: 
+	Go from Floor 1 to 18
+	Go from Floor 18 to 19
+	# Movements: 18
+	Request No: 1
+	Total # Movement: 18
+Current Position: Floor 19
+
+------------------------------
+New Lift Request from 3 to 8
+Request No: 13
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 7
+Request: Floor 19 to 1
+Details: 
+	Go from Floor 7 to 19
+	Go from Floor 19 to 1
+	# Movements: 30
+	Request No: 2
+	Total # Movement: 36
+Current Position: Floor 1
+
+------------------------------
+New Lift Request from 10 to 5
+Request No: 14
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 1
+Request: Floor 1 to 3
+Details: 
+	Go from Floor 1 to 1
+	Go from Floor 1 to 3
+	# Movements: 2
+	Request No: 2
+	Total # Movement: 14
+Current Position: Floor 3
+
+------------------------------
+New Lift Request from 19 to 12
+Request No: 15
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 19
+Request: Floor 8 to 16
+Details: 
+	Go from Floor 19 to 8
+	Go from Floor 8 to 16
+	# Movements: 19
+	Request No: 2
+	Total # Movement: 37
+Current Position: Floor 16
+
+Lift-2 Operation
+Previous Floor: 3
+Request: Floor 17 to 18
+Details: 
+	Go from Floor 3 to 17
+	Go from Floor 17 to 18
+	# Movements: 15
+	Request No: 3
+	Total # Movement: 29
+Current Position: Floor 18
+
+------------------------------
+New Lift Request from 18 to 8
+Request No: 16
+------------------------------
+
+------------------------------
+New Lift Request from 11 to 3
+Request No: 17
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 1
+Request: Floor 9 to 19
+Details: 
+	Go from Floor 1 to 9
+	Go from Floor 9 to 19
+	# Movements: 18
+	Request No: 3
+	Total # Movement: 54
+Current Position: Floor 19
+
+------------------------------
+New Lift Request from 20 to 4
+Request No: 18
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 16
+Request: Floor 14 to 4
+Details: 
+	Go from Floor 16 to 14
+	Go from Floor 14 to 4
+	# Movements: 12
+	Request No: 3
+	Total # Movement: 49
+Current Position: Floor 4
+
+Lift-2 Operation
+Previous Floor: 18
+Request: Floor 11 to 6
+Details: 
+	Go from Floor 18 to 11
+	Go from Floor 11 to 6
+	# Movements: 12
+	Request No: 4
+	Total # Movement: 41
+Current Position: Floor 6
+
+------------------------------
+New Lift Request from 10 to 8
+Request No: 19
+------------------------------
+
+------------------------------
+New Lift Request from 2 to 8
+Request No: 20
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 19
+Request: Floor 12 to 10
+Details: 
+	Go from Floor 19 to 12
+	Go from Floor 12 to 10
+	# Movements: 9
+	Request No: 4
+	Total # Movement: 63
+Current Position: Floor 10
+
+------------------------------
+New Lift Request from 12 to 15
+Request No: 21
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 4
+Request: Floor 4 to 5
+Details: 
+	Go from Floor 4 to 4
+	Go from Floor 4 to 5
+	# Movements: 1
+	Request No: 4
+	Total # Movement: 50
+Current Position: Floor 5
+
+------------------------------
+New Lift Request from 1 to 4
+Request No: 22
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 10
+Request: Floor 3 to 8
+Details: 
+	Go from Floor 10 to 3
+	Go from Floor 3 to 8
+	# Movements: 12
+	Request No: 5
+	Total # Movement: 75
+Current Position: Floor 8
+
+------------------------------
+New Lift Request from 16 to 15
+Request No: 23
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 6
+Request: Floor 10 to 5
+Details: 
+	Go from Floor 6 to 10
+	Go from Floor 10 to 5
+	# Movements: 9
+	Request No: 5
+	Total # Movement: 50
+Current Position: Floor 5
+
+------------------------------
+New Lift Request from 10 to 11
+Request No: 24
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 5
+Request: Floor 19 to 12
+Details: 
+	Go from Floor 5 to 19
+	Go from Floor 19 to 12
+	# Movements: 21
+	Request No: 5
+	Total # Movement: 71
+Current Position: Floor 12
+
+------------------------------
+New Lift Request from 8 to 15
+Request No: 25
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 8
+Request: Floor 18 to 8
+Details: 
+	Go from Floor 8 to 18
+	Go from Floor 18 to 8
+	# Movements: 20
+	Request No: 6
+	Total # Movement: 95
+Current Position: Floor 8
+
+------------------------------
+New Lift Request from 8 to 5
+Request No: 26
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 5
+Request: Floor 11 to 3
+Details: 
+	Go from Floor 5 to 11
+	Go from Floor 11 to 3
+	# Movements: 14
+	Request No: 6
+	Total # Movement: 64
+Current Position: Floor 3
+
+------------------------------
+New Lift Request from 9 to 16
+Request No: 27
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 12
+Request: Floor 20 to 4
+Details: 
+	Go from Floor 12 to 20
+	Go from Floor 20 to 4
+	# Movements: 24
+	Request No: 6
+	Total # Movement: 95
+Current Position: Floor 4
+
+------------------------------
+New Lift Request from 13 to 19
+Request No: 28
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 8
+Request: Floor 10 to 8
+Details: 
+	Go from Floor 8 to 10
+	Go from Floor 10 to 8
+	# Movements: 4
+	Request No: 7
+	Total # Movement: 99
+Current Position: Floor 8
+
+Lift-1 Operation
+Previous Floor: 4
+Request: Floor 2 to 8
+Details: 
+	Go from Floor 4 to 2
+	Go from Floor 2 to 8
+	# Movements: 8
+	Request No: 7
+	Total # Movement: 103
+Current Position: Floor 8
+
+------------------------------
+New Lift Request from 12 to 9
+Request No: 29
+------------------------------
+
+------------------------------
+New Lift Request from 19 to 13
+Request No: 30
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 3
+Request: Floor 12 to 15
+Details: 
+	Go from Floor 3 to 12
+	Go from Floor 12 to 15
+	# Movements: 12
+	Request No: 7
+	Total # Movement: 76
+Current Position: Floor 15
+
+------------------------------
+New Lift Request from 11 to 14
+Request No: 31
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 8
+Request: Floor 1 to 4
+Details: 
+	Go from Floor 8 to 1
+	Go from Floor 1 to 4
+	# Movements: 10
+	Request No: 8
+	Total # Movement: 113
+Current Position: Floor 4
+
+------------------------------
+New Lift Request from 6 to 10
+Request No: 32
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 8
+Request: Floor 16 to 15
+Details: 
+	Go from Floor 8 to 16
+	Go from Floor 16 to 15
+	# Movements: 9
+	Request No: 8
+	Total # Movement: 108
+Current Position: Floor 15
+
+Lift-2 Operation
+Previous Floor: 15
+Request: Floor 10 to 11
+Details: 
+	Go from Floor 15 to 10
+	Go from Floor 10 to 11
+	# Movements: 6
+	Request No: 8
+	Total # Movement: 82
+Current Position: Floor 11
+
+------------------------------
+New Lift Request from 5 to 15
+Request No: 33
+------------------------------
+
+------------------------------
+New Lift Request from 18 to 7
+Request No: 34
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 4
+Request: Floor 8 to 15
+Details: 
+	Go from Floor 4 to 8
+	Go from Floor 8 to 15
+	# Movements: 11
+	Request No: 9
+	Total # Movement: 124
+Current Position: Floor 15
+
+------------------------------
+New Lift Request from 1 to 18
+Request No: 35
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 15
+Request: Floor 8 to 5
+Details: 
+	Go from Floor 15 to 8
+	Go from Floor 8 to 5
+	# Movements: 10
+	Request No: 9
+	Total # Movement: 118
+Current Position: Floor 5
+
+Lift-1 Operation
+Previous Floor: 15
+Request: Floor 9 to 16
+Details: 
+	Go from Floor 15 to 9
+	Go from Floor 9 to 16
+	# Movements: 13
+	Request No: 10
+	Total # Movement: 137
+Current Position: Floor 16
+
+------------------------------
+New Lift Request from 8 to 6
+Request No: 36
+------------------------------
+
+------------------------------
+New Lift Request from 15 to 8
+Request No: 37
+------------------------------
+
+------------------------------
+New Lift Request from 11 to 9
+Request No: 38
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 11
+Request: Floor 13 to 19
+Details: 
+	Go from Floor 11 to 13
+	Go from Floor 13 to 19
+	# Movements: 8
+	Request No: 9
+	Total # Movement: 90
+Current Position: Floor 19
+
+Lift-3 Operation
+Previous Floor: 5
+Request: Floor 12 to 9
+Details: 
+	Go from Floor 5 to 12
+	Go from Floor 12 to 9
+	# Movements: 10
+	Request No: 10
+	Total # Movement: 128
+Current Position: Floor 9
+
+------------------------------
+New Lift Request from 2 to 6
+Request No: 39
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 19
+Request: Floor 19 to 13
+Details: 
+	Go from Floor 19 to 19
+	Go from Floor 19 to 13
+	# Movements: 6
+	Request No: 10
+	Total # Movement: 96
+Current Position: Floor 13
+
+------------------------------
+New Lift Request from 14 to 9
+Request No: 40
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 16
+Request: Floor 11 to 14
+Details: 
+	Go from Floor 16 to 11
+	Go from Floor 11 to 14
+	# Movements: 8
+	Request No: 11
+	Total # Movement: 145
+Current Position: Floor 14
+
+------------------------------
+New Lift Request from 4 to 3
+Request No: 41
+------------------------------
+
+------------------------------
+New Lift Request from 9 to 8
+Request No: 42
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 9
+Request: Floor 6 to 10
+Details: 
+	Go from Floor 9 to 6
+	Go from Floor 6 to 10
+	# Movements: 7
+	Request No: 11
+	Total # Movement: 135
+Current Position: Floor 10
+
+Lift-2 Operation
+Previous Floor: 13
+Request: Floor 5 to 15
+Details: 
+	Go from Floor 13 to 5
+	Go from Floor 5 to 15
+	# Movements: 18
+	Request No: 11
+	Total # Movement: 114
+Current Position: Floor 15
+
+Lift-1 Operation
+Previous Floor: 14
+Request: Floor 18 to 7
+Details: 
+	Go from Floor 14 to 18
+	Go from Floor 18 to 7
+	# Movements: 15
+	Request No: 12
+	Total # Movement: 160
+Current Position: Floor 7
+
+------------------------------
+New Lift Request from 6 to 4
+Request No: 43
+------------------------------
+
+------------------------------
+New Lift Request from 6 to 17
+Request No: 44
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 10
+Request: Floor 1 to 18
+Details: 
+	Go from Floor 10 to 1
+	Go from Floor 1 to 18
+	# Movements: 26
+	Request No: 12
+	Total # Movement: 161
+Current Position: Floor 18
+
+------------------------------
+New Lift Request from 17 to 6
+Request No: 45
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 15
+Request: Floor 8 to 6
+Details: 
+	Go from Floor 15 to 8
+	Go from Floor 8 to 6
+	# Movements: 9
+	Request No: 12
+	Total # Movement: 123
+Current Position: Floor 6
+
+------------------------------
+New Lift Request from 20 to 2
+Request No: 46
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 7
+Request: Floor 15 to 8
+Details: 
+	Go from Floor 7 to 15
+	Go from Floor 15 to 8
+	# Movements: 15
+	Request No: 13
+	Total # Movement: 175
+Current Position: Floor 8
+
+------------------------------
+New Lift Request from 4 to 7
+Request No: 47
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 18
+Request: Floor 11 to 9
+Details: 
+	Go from Floor 18 to 11
+	Go from Floor 11 to 9
+	# Movements: 9
+	Request No: 13
+	Total # Movement: 170
+Current Position: Floor 9
+
+------------------------------
+New Lift Request from 11 to 7
+Request No: 48
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 6
+Request: Floor 2 to 6
+Details: 
+	Go from Floor 6 to 2
+	Go from Floor 2 to 6
+	# Movements: 8
+	Request No: 13
+	Total # Movement: 131
+Current Position: Floor 6
+
+------------------------------
+New Lift Request from 10 to 2
+Request No: 49
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 8
+Request: Floor 14 to 9
+Details: 
+	Go from Floor 8 to 14
+	Go from Floor 14 to 9
+	# Movements: 11
+	Request No: 14
+	Total # Movement: 186
+Current Position: Floor 9
+
+Lift-3 Operation
+Previous Floor: 9
+Request: Floor 4 to 3
+Details: 
+	Go from Floor 9 to 4
+	Go from Floor 4 to 3
+	# Movements: 6
+	Request No: 14
+	Total # Movement: 176
+Current Position: Floor 3
+
+Lift-2 Operation
+Previous Floor: 6
+Request: Floor 9 to 8
+Details: 
+	Go from Floor 6 to 9
+	Go from Floor 9 to 8
+	# Movements: 4
+	Request No: 14
+	Total # Movement: 135
+Current Position: Floor 8
+
+------------------------------
+New Lift Request from 11 to 17
+Request No: 50
+------------------------------
+
+------------------------------
+New Lift Request from 15 to 20
+Request No: 51
+------------------------------
+
+------------------------------
+New Lift Request from 13 to 12
+Request No: 52
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 9
+Request: Floor 6 to 4
+Details: 
+	Go from Floor 9 to 6
+	Go from Floor 6 to 4
+	# Movements: 5
+	Request No: 15
+	Total # Movement: 191
+Current Position: Floor 4
+
+------------------------------
+New Lift Request from 9 to 6
+Request No: 53
+------------------------------
+
+------------------------------
+New Lift Request from 6 to 7
+Request No: 54
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 8
+Request: Floor 6 to 17
+Details: 
+	Go from Floor 8 to 6
+	Go from Floor 6 to 17
+	# Movements: 13
+	Request No: 15
+	Total # Movement: 148
+Current Position: Floor 17
+
+Lift-3 Operation
+Previous Floor: 3
+Request: Floor 17 to 6
+Details: 
+	Go from Floor 3 to 17
+	Go from Floor 17 to 6
+	# Movements: 25
+	Request No: 15
+	Total # Movement: 201
+Current Position: Floor 6
+
+------------------------------
+New Lift Request from 15 to 11
+Request No: 55
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 4
+Request: Floor 20 to 2
+Details: 
+	Go from Floor 4 to 20
+	Go from Floor 20 to 2
+	# Movements: 34
+	Request No: 16
+	Total # Movement: 225
+Current Position: Floor 2
+
+------------------------------
+New Lift Request from 20 to 15
+Request No: 56
+------------------------------
+
+Lift-3 Operation
+Previous Floor: 6
+Request: Floor 4 to 7
+Details: 
+	Go from Floor 6 to 4
+	Go from Floor 4 to 7
+	# Movements: 5
+	Request No: 16
+	Total # Movement: 206
+Current Position: Floor 7
+
+------------------------------
+New Lift Request from 12 to 8
+Request No: 57
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 17
+Request: Floor 11 to 7
+Details: 
+	Go from Floor 17 to 11
+	Go from Floor 11 to 7
+	# Movements: 10
+	Request No: 16
+	Total # Movement: 158
+Current Position: Floor 7
+
+------------------------------
+New Lift Request from 20 to 3
+Request No: 58
+------------------------------
+
+Lift-1 Operation
+Previous Floor: 2
+Request: Floor 10 to 2
+Details: 
+	Go from Floor 2 to 10
+	Go from Floor 10 to 2
+	# Movements: 16
+	Request No: 17
+	Total # Movement: 241
+Current Position: Floor 2
+
+Lift-3 Operation
+Previous Floor: 7
+Request: Floor 11 to 17
+Details: 
+	Go from Floor 7 to 11
+	Go from Floor 11 to 17
+	# Movements: 10
+	Request No: 17
+	Total # Movement: 216
+Current Position: Floor 17
+
+------------------------------
+New Lift Request from 13 to 2
+Request No: 59
+------------------------------
+
+Lift-2 Operation
+Previous Floor: 7
+Request: Floor 15 to 20
+Details: 
+	Go from Floor 7 to 15
+	Go from Floor 15 to 20
+	# Movements: 13
+	Request No: 17
+	Total # Movement: 171
+Current Position: Floor 20
+
+Lift-3 Operation
+Previous Floor: 17
+Request: Floor 13 to 12
+Details: 
+	Go from Floor 17 to 13
+	Go from Floor 13 to 12
+	# Movements: 5
+	Request No: 18
+	Total # Movement: 221
+Current Position: Floor 12
+
+Lift-1 Operation
+Previous Floor: 2
+Request: Floor 9 to 6
+Details: 
+	Go from Floor 2 to 9
+	Go from Floor 9 to 6
+	# Movements: 10
+	Request No: 18
+	Total # Movement: 251
+Current Position: Floor 6
+
+Lift-3 Operation
+Previous Floor: 12
+Request: Floor 6 to 7
+Details: 
+	Go from Floor 12 to 6
+	Go from Floor 6 to 7
+	# Movements: 7
+	Request No: 19
+	Total # Movement: 228
+Current Position: Floor 7
+
+Lift-2 Operation
+Previous Floor: 20
+Request: Floor 15 to 11
+Details: 
+	Go from Floor 20 to 15
+	Go from Floor 15 to 11
+	# Movements: 9
+	Request No: 18
+	Total # Movement: 180
+Current Position: Floor 11
+
+Lift-3 Operation
+Previous Floor: 7
+Request: Floor 20 to 15
+Details: 
+	Go from Floor 7 to 20
+	Go from Floor 20 to 15
+	# Movements: 18
+	Request No: 20
+	Total # Movement: 246
+Current Position: Floor 15
+
+Lift-1 Operation
+Previous Floor: 6
+Request: Floor 12 to 8
+Details: 
+	Go from Floor 6 to 12
+	Go from Floor 12 to 8
+	# Movements: 10
+	Request No: 19
+	Total # Movement: 261
+Current Position: Floor 8
+
+Lift-3 Operation
+Previous Floor: 15
+Request: Floor 20 to 3
+Details: 
+	Go from Floor 15 to 20
+	Go from Floor 20 to 3
+	# Movements: 22
+	Request No: 21
+	Total # Movement: 268
+Current Position: Floor 3
+
+Lift-2 Operation
+Previous Floor: 11
+Request: Floor 13 to 2
+Details: 
+	Go from Floor 11 to 13
+	Go from Floor 13 to 2
+	# Movements: 13
+	Request No: 19
+	Total # Movement: 193
+Current Position: Floor 2
+
+Total Number of Requests: 59
+Total Number of Movements: 722

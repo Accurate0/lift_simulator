@@ -26,21 +26,6 @@ PROCESS_OBJ=$(PROCESS_SRC:$(PROCESS_SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 .PHONY: all clean
 
-ifdef TSAN
-CFLAGS+=-fsanitize=thread
-LDFLAGS+=-fsanitize=thread
-endif
-
-ifdef ASAN
-CFLAGS+=-fsanitize=address
-LDFLAGS+=-fsanitize=address -lubsan
-endif
-
-ifdef DEBUG
-CFLAGS+=-D DEBUG
-DEBUG: clean all
-endif
-
 all: $(EXEC_A) $(EXEC_B)
 
 $(EXEC_A): $(COMMON_OBJ) $(THREAD_OBJ)

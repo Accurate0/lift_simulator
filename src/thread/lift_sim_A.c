@@ -15,7 +15,6 @@
 
 #include <common/request.h>
 #include <common/file_io.h>
-#include <common/debug.h>
 #include <common/common.h>
 
 #include "queue.h"
@@ -81,11 +80,6 @@ int main(int argc, const char *argv[])
     for(int i = 0; i < TOTAL_THREADS; i++) {
         pthread_join(threads[i], NULL);
     }
-
-    D_PRINTF("final : %d %d %d %d\n", s->total_requests,
-                lifts[0]->total_movements,
-                lifts[1]->total_movements,
-                lifts[2]->total_movements);
 
     // Log the final stuff once the threads are dead
     log_printf(logger, "Total Number of Requests: %d\n"

@@ -15,7 +15,6 @@
 #include <stdlib.h>
 
 #include <common/request.h>
-#include <common/debug.h>
 
 #include "lift.h"
 #include "queue.h"
@@ -69,11 +68,6 @@ void* lift(void *ptr)
     int previous_floor = 1;
     int request_no = 0;
 
-#ifdef DEBUG
-    pthread_t t = pthread_self();
-    D_PRINTF("consumer created: %d\n", l->id);
-#endif
-
     while(1) {
         pthread_mutex_lock(&l->queue->mutex);
 
@@ -85,18 +79,14 @@ void* lift(void *ptr)
         }
 
         while(l->queue->empty && !l->queue->finished) {
-            D_PRINTF("consumer waiting: %d\n", l->id);
             pthread_cond_wait(&l->queue->cond_empty, &l->queue->mutex);
         }
 
         if(!l->queue->empty) {
-            D_PRINTF("consumer accessing queue: %d\n", l->id);
             request_t *r = queue_remove(l->queue);
             // need to let scheduler thread know that there's space now in the queue
             pthread_cond_signal(&l->queue->cond_full);
             pthread_mutex_unlock(&l->queue->mutex);
-
-            D_PRINTF("consumer working: %d %d sleeping for %d\n", r->src, r->dest, l->lift_time);
 
             request_no++;
             previous_floor = current_floor;
@@ -126,8 +116,6 @@ void* lift(void *ptr)
             pthread_mutex_unlock(&l->queue->mutex);
         }
     }
-
-    D_PRINTF("thread -> %ld has died\n", t);
 
     return NULL;
 }

@@ -18,8 +18,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include <common/debug.h>
-
 #include "memory.h"
 #include "cqueue.h"
 #include "lift_main.h"
@@ -29,7 +27,6 @@ int lift_main(int lift_num, int sleep_time, FILE *output)
     int previous_floor = 1;
     int current_floor = 1;
     int request_num = 0;
-    D_PRINTF("lift %d : created\n", lift_num);
     // Get access to the shared memory
     int shm_fd = shm_open(SHARED_MEMORY_NAME, O_RDWR, 0666);
     int req_fd = shm_open(SHARED_MEMORY_REQUESTS, O_RDWR, 0666);
@@ -39,7 +36,6 @@ int lift_main(int lift_num, int sleep_time, FILE *output)
     while(1) {
         sem_wait(&sm->semaphore.mutex);
         if(sm->empty && sm->finished) {
-            D_PRINTF("lift %d : dead\n", lift_num);
             sem_post(&sm->semaphore.full);
             sem_post(&sm->semaphore.mutex);
             break;
@@ -54,15 +50,11 @@ int lift_main(int lift_num, int sleep_time, FILE *output)
         // "mutex" will prevent progress, and likely deadlock
 
 
-        D_PRINTF("lift %d : waiting on mutex\n", lift_num);
         sem_wait(&sm->semaphore.full);
         sem_wait(&sm->semaphore.mutex);
-        D_PRINTF("lift %d : mutex grabbed\n", lift_num);
 
         if(!sm->empty) {
             request_t r = sm_cqueue_remove(sm);
-            D_PRINTF("lift %d : moving from %d to %d\n", lift_num, r.src, r.dest);
-
             sem_wait(&sm->semaphore.file);
             request_num++;
             previous_floor = current_floor;
@@ -89,7 +81,6 @@ int lift_main(int lift_num, int sleep_time, FILE *output)
             sem_post(&sm->semaphore.file);
             sem_post(&sm->semaphore.mutex);
             sem_post(&sm->semaphore.empty);
-            D_PRINTF("lift %d : mutex released\n", lift_num);
 
             // release the mutex since the critical section
             // doesn't involve the work we do (in this case)

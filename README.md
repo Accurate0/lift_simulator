@@ -24,4 +24,4 @@ $ ./lift_sim_{A,B} [max buffer size] [time per sleep] [input file]
 
 ## Testing
 
-Various test files are included in the `test/inputs` directory, with outputs available in the `examples` directory.
+Various test files are included in the `test/inputs` directory, with some sample outputs available in the `examples` directory.
