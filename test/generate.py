@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# JUST A SMALL SCRIPT GENERATE SOME TEST FILES OF VARYING SIZE
+
 # n = 50-100
 # m = 20
 import random

@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+# USES PYTHON THREADS TO QUICKLY RUN THROUGH ALL THE TEST FILES
+# IN THE INPUTS DIRECTORY, JUST A HACK, NOT SUPPOSED TO BE MARKED
+
 from threading import Thread
 from queue import Queue
 from os import listdir

@@ -112,9 +112,9 @@ Once the processes have been \texttt{wait}ed on, the shared memory is unmapped a
 The output \texttt{FILE} isn't included in the shared memory since according to the manual page for \texttt{fork}, the open file descriptors are shared across child processes, therefore the parent simply opens it, and each child will close it when they're done, and same for the parent.
 
 \newpage
-\section{Testing - Processes}
-Each test file is a different size between the allowed values of 50 and 100.
-\subsection{Example 1}
+\section{Testing}
+\subsection{Processes}
+\subsubsection{Example 1}
 Testing with a buffer size larger than the number of threads, and relatively small sleep time to see if the program behaves as expected. Through manual inspection of the output, it can be surmised that the program works as expected.
 
 \paragraph{Command}\texttt{./lift\_sim\_B 4 2 test/inputs/test2.txt}
@@ -125,7 +125,7 @@ Testing with a buffer size larger than the number of threads, and relatively sma
 \paragraph{Output}
 \texttt{examples/process/test2.out}
 
-\subsection{Example 2}
+\subsubsection{Example 2}
 Testing with a significantly larger buffer size but with a sleep time of 0 to see if mutual exclusion still exists in the case of the ``work'' being done quickly. Manual inspection reveals the expected output, and since there was a final output, it means there was no deadlock while acquiring resources.
 
 \paragraph{Command}\texttt{./lift\_sim\_B 10 0 test/inputs/test7.txt}
@@ -136,7 +136,7 @@ Testing with a significantly larger buffer size but with a sleep time of 0 to se
 \paragraph{Output}
 \texttt{examples/process/test7.out}
 
-\subsection{Example 3}
+\subsubsection{Example 3}
 A very large buffer size with a long sleep time to demonstrate another possible situation where the program works as expected.
 
 \paragraph{Command}\texttt{./lift\_sim\_B 20 5 test/inputs/test21.txt}
@@ -148,9 +148,9 @@ A very large buffer size with a long sleep time to demonstrate another possible 
 \texttt{examples/process/test21.out}
 
 \newpage
-\section{Testing - Threads}
+\subsection{Threads}
 Each test file is a different size between the allowed values of 50 and 100.
-\subsection{Example 1}
+\subsubsection{Example 1}
 A buffer size equal to to the number of worker threads with a relatively short ``working'' time.
 
 \paragraph{Command}\texttt{./lift\_sim\_A 3 1 test/inputs/test34.txt}
@@ -162,7 +162,7 @@ A buffer size equal to to the number of worker threads with a relatively short `
 \texttt{examples/threads/test34.out}
 
 
-\subsection{Example 2}
+\subsubsection{Example 2}
 Larger buffer with the same time.
 
 \paragraph{Command}\texttt{./lift\_sim\_A 5 1 test/inputs/test1.txt}
@@ -174,7 +174,7 @@ Larger buffer with the same time.
 \texttt{examples/threads/test1.out}
 
 
-\subsection{Example 3}
+\subsubsection{Example 3}
 Even larger buffer with a zero time to ensure mutual exclusion happens even without the threads sleeping.
 
 \paragraph{Command}\texttt{./lift\_sim\_A 10 0 test/inputs/test10.txt}

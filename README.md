@@ -25,3 +25,5 @@ $ ./lift_sim_{A,B} [max buffer size] [time per sleep] [input file]
 ## Testing
 
 Various test files are included in the `test/inputs` directory, with some sample outputs available in the `examples` directory.
+
+Python scripts in the testing directory are for testing the program through the input files quickly.
